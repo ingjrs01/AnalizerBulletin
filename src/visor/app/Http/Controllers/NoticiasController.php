@@ -68,6 +68,8 @@ class NoticiasController extends Controller
     public function edit($id)
     {
         $noticia = Noticia::findOrFail($id);
+        $noticia->readed = 1;
+        $noticia->save();
         return view('noticias.edit',compact('noticia'));         
     }
 

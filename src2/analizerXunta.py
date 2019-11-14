@@ -29,10 +29,20 @@ class Analizer():
             print("Database don't connected !")            
 
     def __loadDBConnection(self): 
-        self.__host = "db" 
-        self.__user = "root"
-        self.__db   = "analizerdb"
-        self.__password = "test"
+        self.__host      = "db" 
+        self.__user      = "root"
+        self.__db        = "analizerdb"
+        self.__password  = "test"
+        self.__tablename = "noticias"
+    
+    # Busca si la noticia contiene una serie de palabras
+    def isNotificable(selft, new):
+        words = ['OPOSICIÓN', 'SELECTIVOS', 'FUNCIONARIO','EMPREGO']
+        for word in words:
+            if (word in new):
+                return True
+
+        return False
 
     def analizeWebDepo(self,url):
         try: 
@@ -59,8 +69,13 @@ class Analizer():
                     for li in lis: 
                         cabecera = li.span.getText()
                         titulo   = li.p.getText()
-                        uri      = li.a['href']
-                        self.insertLine("BOPO",numero,year ,cabecera,titulo,uri,0)
+                        if (self.isNotificable(titulo)):
+                            notify = 1
+                        else:
+                            notify = 0
+
+                        uri      = "https://boppo.depo.gal" + li.a['href']
+                        self.insertLine("BOPO",numero,year ,cabecera,titulo,uri,notify)
 
     def analizeWebXunta(self,url):
         try: 
@@ -87,12 +102,13 @@ class Analizer():
                         if (line.a is not None): 
                             cabecera = "N/D"
                             titulo   = line.a.getText() # laalala
-                            uri      = line.a['href'] 
+                            uri      = "https://www.xunta.gal" + line.a['href'] 
                             self.insertLine("DOGA",numero, year, cabecera,titulo,uri,1)
 
     def insertLine(self, bulletin, bulletin_no, bulletin_year,heading, title, urline, notify):
         cursor = self.__db.cursor()
-        sql = "INSERT INTO entry (bulletin,bulletin_year, bulletin_no, organization, newname, url,fav , notify, readed,created) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"
+        sql = "INSERT INTO " + self.__tablename
+        sql += "(bulletin,bulletin_year, bulletin_no, organization, newname, url,fav , notify, readed,created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"
         organization = heading
         newname = title
         url = urline
@@ -111,41 +127,36 @@ class Analizer():
     
     def getData(self):
         cursor = self.__db.cursor()
-        #sql = "SELECT bulletin,bulletin_no,newname FROM entry WHERE (newname LIKE '%OPOSICIÓN%' OR `notify` = 1) AND `readed` = 0 "
 
-        where = " WHERE (newname LIKE '%OPOSICIÓN%' "
-        #where += " OR newname LIKE '%CONVOCATORIA%'"
-        where += " OR newname LIKE '%SELECTIVOS%'"
-        where += " OR newname LIKE '%FUNCIONARIO%'"
-        where += " OR newname LIKE '%EMPREGO%')"
-        where += " AND `readed` = 0"
-        #sql = " SELECT bulletin,bulletin_no,newname FROM entry "
-        sql = " SELECT bulletin,bulletin_no,newname FROM entry " + where
-
-        cursor.execute(sql)
-        rows = cursor.fetchall()
-        for row in rows:
-            msg = row[0] + " " + str(row[1]) + " - " + row[2]
-            self.sendTelegram(msg)
-        #sql = "UPDATE entry SET `readed` = 1 WHERE `readed` = 0 "
-        sql = "UPDATE entry SET `readed` = 1 " + where
-        try: 
-            cursor.execute(sql)
-            self.__db.commit()
-        except: 
-            self.__db.rollback()
-            print("Error actualizando las filas vistas")
+        #where = " WHERE (newname LIKE '%OPOSICIÓN%' "
+        #where += " OR newname LIKE '%SELECTIVOS%'"
+        #where += " OR newname LIKE '%FUNCIONARIO%'"
+        #where += " OR newname LIKE '%EMPREGO%')"
+        #where += " AND `readed` = 0"
+        #sql = " SELECT bulletin,bulletin_no,newname FROM " + self.__tablename + " " + where
+        #cursor.execute(sql)
+        #rows = cursor.fetchall()
+        #for row in rows:
+        #    msg = row[0] + " " + str(row[1]) + " - " + row[2]
+        #    self.sendTelegram(msg)
+        #sql = "UPDATE " + self.__tablename + " SET `readed` = 1 " + where
+        #try: 
+        #    cursor.execute(sql)
+        #    self.__db.commit()
+        #except: 
+        #    self.__db.rollback()
+        #    print("Error actualizando las filas vistas")
 
         # -------------------- Vamos a ver cosas ----------------------------
-        where = " WHERE `readed` = 0 "
-        sql = " SELECT bulletin,bulletin_no,newname FROM entry " + where
+        where = " WHERE `notify` = 1 "
+        sql = " SELECT bulletin,bulletin_no,newname FROM " + self.__tablename + " " + where
 
         cursor.execute(sql)
         rows = cursor.fetchall()
         for row in rows:
             msg = row[0] + " " + str(row[1]) + " - " + row[2]
             self.sendTelegram(msg)
-        sql = "UPDATE entry SET `readed` = 1 " + where
+        sql = "UPDATE " + self.__tablename + " SET `notify` = 0 " + where
         try: 
             cursor.execute(sql)
             self.__db.commit()
@@ -156,7 +167,7 @@ class Analizer():
 
     def checkNumber(self,year, numero, bulletin):             
         cursor = self.__db.cursor()
-        sql = "SELECT * FROM entry WHERE bulletin_no = %s AND bulletin_year = %s AND bulletin = %s "
+        sql = "SELECT * FROM " + self.__tablename + " WHERE bulletin_no = %s AND bulletin_year = %s AND bulletin = %s "
         cursor.execute(sql,(numero,year,bulletin))
         rows = cursor.fetchall()
         if (cursor.rowcount == 0):

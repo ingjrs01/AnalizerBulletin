@@ -126,7 +126,7 @@
         <th scope="col">Boletín</th>
         <th scope="col">Número</th>
         <th scope="col">Año</th>
-        <th scope="col">Organización</th>
+        <th scope="col" style="width: 20%">Organización</th>
         <th scope="col">Creación</th>
         <th scope="col">Acción</th>
     </tr>
