@@ -32,6 +32,6 @@ class Noticia extends Model
         }
 
         //return $conditions;
-        return $query->where($conditions)->orderBy('id', 'DESC')->paginate(25);
+        return $query->where($conditions)->orderBy('bulletin_date', 'DESC')->paginate(25);
     }    
 }

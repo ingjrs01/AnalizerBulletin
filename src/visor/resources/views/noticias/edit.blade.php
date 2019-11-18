@@ -19,7 +19,8 @@
 
 <div class="container-fluid ">
 
-<form>
+<form method="POST" action="{{route('home')}}">
+@csrf
     <div class="form-group">
         <label for="newname">Noticia</label>
         <input type="text" class="form-control" id="newname" placeholder="1234 Main St" value="{{$noticia->newname}}">
@@ -74,7 +75,7 @@
       </label>
     </div>
   </div>
-  <button type="submit" class="btn btn-primary">Sign in</button>
+  <button type="submit" class="btn btn-primary">Volver</button>
 </form>
 
 </div>

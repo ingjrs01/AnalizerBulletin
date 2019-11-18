@@ -56,32 +56,17 @@ class Analizer():
         else:
             content = html.read().decode('utf-8', 'ignore')
             res = BeautifulSoup(content,"html.parser")             
-            print(res.find("h2",{"class":"numero"}).getText())
+
             numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])
             # Obtener el año
             info = res.find("span",{"class":"fecha"}).getText().split()
             year = int(info[len(info)-4])
+            # Obtenemos la fecha:
             mes = self.__meses.index(info[len(info)-6]) + 1 # El array comienza en 0
             dia = int(info[len(info)-8])
             fecha = date(year, mes, dia)
+            ######################
 
-            if (self.checkNumber(year,numero,"BOPO") == False):
-                tags = res.findAll("ul",{"class":"listadoSumario"})
-
-                for tag in tags:
-                    lis = tag.findAll("li")
-                    for li in lis: 
-                        cabecera = li.span.getText()
-                        titulo   = li.p.getText()
-                        if (self.isNotificable(titulo)):
-                            notify = 1
-                        else:
-                            notify = 0
-
-                        uri      = "https://boppo.depo.gal" + li.a['href']
-                        self.insertLine("BOPO",numero,year ,cabecera,titulo,uri,notify,fecha)
-            else:
-                print ("Paso al siguiente")
 
     def analizeWebXunta(self,url):
         try: 
@@ -112,21 +97,19 @@ class Analizer():
                             cabecera = "N/D"
                             titulo   = line.a.getText() # laalala
                             uri      = "https://www.xunta.gal" + line.a['href'] 
-                            self.insertLine("DOGA",numero, year, cabecera,titulo,uri,1,fecha)
-            else: 
-                print ("Pasando Xunta")
+                            self.insertLine("DOGA",numero, year, cabecera,titulo,uri,1)
 
-    def insertLine(self, bulletin, bulletin_no, bulletin_year,heading, title, urline, notify,fecha):
+    def insertLine(self, bulletin, bulletin_no, bulletin_year,heading, title, urline, notify):
         cursor = self.__db.cursor()
         sql = "INSERT INTO " + self.__tablename
-        sql += "(bulletin,bulletin_year, bulletin_no, organization, newname, url,fav , notify, readed,created_at,bulletin_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)"
+        sql += "(bulletin,bulletin_year, bulletin_no, organization, newname, url,fav , notify, readed,created_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)"
         organization = heading
         newname = title
         url = urline
         readed = 0
         fav = 0
         created = datetime.now()
-        recordTuple = (bulletin, bulletin_year, bulletin_no, organization, newname, url,fav ,notify, readed,created,fecha)
+        recordTuple = (bulletin, bulletin_year, bulletin_no, organization, newname, url,fav ,notify, readed,created)
          
         try:
            cursor.execute(sql,recordTuple)
@@ -138,7 +121,6 @@ class Analizer():
     
     def getData(self):
         cursor = self.__db.cursor()
-
         where = " WHERE `notify` = 1 "
         sql = " SELECT bulletin,bulletin_no,newname FROM " + self.__tablename + " " + where
 
@@ -213,9 +195,9 @@ class Analizer():
 
     def run(self): 
         #self.registerListener()
-        l = self.urlGeneratorDepo()
-        for item in l:
-            self.analizeWebDepo(item)
+       # l = self.urlGeneratorDepo()
+       # for item in l:
+        #    self.analizeWebDepo(item)
 
         l2 = self.urlGeneratorXunta()
         for item in l2:

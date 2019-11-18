@@ -4,6 +4,7 @@ td .btn {
 .registerinicio{
     background: -webkit-linear-gradient(left,#3f7483, #0dc9ff);
     margin-top: 0%;
+    height: 100px;
 }
 
 .register{
@@ -14,7 +15,7 @@ td .btn {
 .register-left{
     text-align: center;
     color: #fff;
-    margin-top: 4%;
+    margin-top: 5px;
 }
 .register-left input{
     border: none;
@@ -34,11 +35,12 @@ td .btn {
     border-bottom-left-radius: 10% 50%;
 }
 .register-left img{
-    margin-top: 15%;
-    margin-bottom: 5%;
-    width: 100%;
-    -webkit-animation: mover 2s infinite  alternate;
-    animation: mover 1s infinite  alternate;
+    margin-top: 0%;
+    margin-bottom: 0%;
+    height: 80px;
+    /*width: 100%;*/
+    /*-webkit-animation: mover 2s infinite  alternate;*/
+    /*animation: mover 1s infinite  alternate;*/
 }
 
 @-webkit-keyframes mover {

@@ -38,13 +38,13 @@
 
 <div class="container-fluid registerinicio">
     <div class="row">
-        <div class="col-md-6 register-left register-left1">
+        <div class="col-md-6 register-left regiter-left1">
             <img src="{{asset('img/calendario.png')}}" alt=""/>
         </div>    
         <div class="col-md-6 register-left">
             
             <h3>Bienvenid@</h3>
-            <p>Por favor llena los datos correctamente en el sistema!</p>
+            <p>Revisión de boletines oficiales !</p>
             
         </div>    
     </div>
@@ -114,7 +114,7 @@
   </form>
 </nav>
    <br>
-      <h1 class="text-center">Datos personales</h1>
+      <h1 class="text-center">Boletines Recientes</h1>
 
       <br>
    <br>
@@ -124,9 +124,10 @@
         <th scope="col">#</th>
         <th scope="col" style="width: 35%">Noticia</th>
         <th scope="col">Boletín</th>
-        <th scope="col">Número</th>
+        <th scope="col">Nº</th>
         <th scope="col">Año</th>
         <th scope="col" style="width: 20%">Organización</th>
+        <th scope="col">F. Boletín</th>
         <th scope="col">Creación</th>
         <th scope="col">Acción</th>
     </tr>
@@ -149,13 +150,14 @@
             <td>{{ $item->bulletin_no  }}</td>
             <td>{{ $item->bulletin_year  }}</td>
             <td>{{ $item->organization  }}</td>
+            <td>{{ $item->bulletin_date  }}</td>
             <td>{{ $item->created_at  }}</td>
             <td> 
                 <a href="#" onclick="do_click(event,{{$item->id}})" class="btn btn-info btncolorblanco" >
                     <i class="{{$fav}}" id="cfav-{{$item->id}}"></i>  
                 </a>
                 <a href=" {{ route('noticias.edit',$item->id) }} " class="btn btn-success btncolorblanco">
-                    <i class="fa fa-edit"></i>  
+                    <i class="far fa-eye"></i>  
                 </a>
                 <a href="#" class="btn btn-danger btncolorblanco">
                     <i class="fa fa-trash-alt"></i>  
