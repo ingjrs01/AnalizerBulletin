@@ -25,7 +25,14 @@ class NoticiasController extends Controller
         $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado);
         $years    = [2019,2018];
         $boletines=['BOPO', 'DOGA'];
-        
+        // Para arreglar paginación
+        $noticias->appends(array(
+            'bulletin'=>$bulletin,
+            'bulletin_year'=>$year,
+            'bulletin_no'=>$bulletin_no,
+            'destacado'=>$destacado
+        ));
+
         return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags'));
     }
 
