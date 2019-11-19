@@ -22,3 +22,5 @@ Route::get('/', 'NoticiasController@index')->name('home');
 Route::get('/noticias/{id}/confirm','NoticiasController@confirm')->name('noticias.confirm');
 
 Route::post('/noticias/favorite','NoticiasController@favorite')->name('noticias.favorite');
+
+Route::post('/noticias/settags','NoticiasController@settags')->name('noticias.settags');

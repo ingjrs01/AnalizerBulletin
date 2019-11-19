@@ -1,37 +1,68 @@
 @extends('plantilla.plantilla')
 
 <script>
-    function do_click (e,id)
-    {
-        e.preventDefault();
-        $.ajax({
-            data: {"_token": "{{ csrf_token() }}","id" : id},
-            url: " {{ route('noticias.favorite') }}",
-            type:'POST',
-            dataType: 'json',
-            success: function(data) {
-                name = "#cfav-"+id;  
+function do_click (e,id)
+{
+    e.preventDefault();
+    $.ajax({
+        data: {"_token": "{{ csrf_token() }}","id" : id},
+        url: " {{ route('noticias.favorite') }}",
+        type:'POST',
+        dataType: 'json',
+        success: function(data) {
+            name = "#cfav-"+id;  
 
-                if (data == 1)
-                {
-                    $(name).removeClass("far");
-                    $(name).addClass("fas");
-                }
-                else 
-                {
-                    $(name).removeClass("fas");
-                    $(name).addClass("far");
-                }                
-                console.log(data);
+            if (data == 1)
+            {
+                $(name).removeClass("far");
+                $(name).addClass("fas");
             }
-        });
-        
-    }
+            else 
+            {
+                $(name).removeClass("fas");
+                $(name).addClass("far");
+            }                
+            console.log(data);
+        }
+    });
+    
+}
+function send(e)
+{
+    alert("enviando");
+}
+function clicktag(id)
+{
+    //console.log("Tag click");
+    var values = [];
+    // Obtener los elementos de la tabla seleccionados. 
+    $('.control-check-j').each(
+        function() 
+        {      
+            if ($(this).is(":checked"))
+            {
+                values.push($(this).val());
+                console.log($(this).val());
+            }
+        }
+    );
+    console.debug(values);
+    $.ajax({
+        data: {"_token": "{{ csrf_token() }}","ids" : values,"tagid":id},
+        url: " {{ route('noticias.settags') }}",
+        type:'POST',
+        dataType: 'json',
+        success: function(data) {
+            $('.control-check-j').prop('checked', false);
+            $('.check-menu').prop('checked', false);
+            
+            //$("#captureImage").prop('checked', false);
+            console.log(data);
+        }
+    });
 
-    function send(e)
-    {
-        alert("enviando");
-    }
+}
+
 </script>
 
 @section('contenido')
@@ -74,8 +105,35 @@
 
 <br>
 @php ($destacadol = ['Destacados', 'No Destacados'])
-<nav class="navbar navbar-light float-right">
-  <form class="form-inline">
+<nav class="navbar navbar-expand-lg navbar-light">
+<a class="navbar-brand" href="#">Boletines</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-tag"></i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            @foreach ($tags as $tag)
+                <a class="dropdown-item" href="#"><input type="checkbox" class="check-menu" onclick="clicktag({{$tag->id}})" />{{$tag->name}}</a>
+            @endforeach
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Aplicar</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
     <select name="destacado" class="form-control mr-sm-2" id="idDestacado" onchange="this.form.submit()">
         <option>Todos</option>
         @foreach($destacadol as $des)
@@ -111,17 +169,23 @@
 
     <input name="bulletin_no" class="form-control mr-sm-2" type="search" placeholder="Buscar por número" aria-label="Search" value="{{$bulletin_no}}">
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-  </form>
-</nav>
-   <br>
-      <h1 class="text-center">Boletines Recientes</h1>
 
-      <br>
-   <br>
+
+
+    </form>
+  </div>
+</nav>
+<br>
+
 <table class="table-responsive table text-center">
     <thead>
     <tr>
-        <th scope="col">#</th>
+        <th scope="col">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="tableDefaultCheck" onclick="checkAll(event)">
+                <label class="custom-control-label" for="tableDefaultCheck">#</label>
+            </div>
+        </th>
         <th scope="col" style="width: 35%">Noticia</th>
         <th scope="col">Boletín</th>
         <th scope="col">Nº</th>
@@ -144,7 +208,12 @@
             @endif
 
         <tr class="{{$visto}}">
-            <th scope="row">{{$item->id}}</th>
+            <th scope="row">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input control-check-j" id="tableDefaultCheck{{$item->id}}" value="{{$item->id}}">
+                    <label class="custom-control-label" for="tableDefaultCheck{{$item->id}}"> {{$item->id}} </label>
+                </div>
+            </th>
             <td class="text-left "><a href="{{$item->url}}" target="_blank">{{ $item->newname }} </a></td>
             <td>{{ $item->bulletin  }}</td>
             <td>{{ $item->bulletin_no  }}</td>

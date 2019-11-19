@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Noticia;
+use App\Tag;
 
 class NoticiasController extends Controller
 {
@@ -20,11 +21,12 @@ class NoticiasController extends Controller
         $destacado   = $request->get('destacado');
         //return dd($destacado);
 
+        $tags     = Tag::all();
         $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado);
         $years    = [2019,2018];
         $boletines=['BOPO', 'DOGA'];
         
-        return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias'));
+        return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags'));
     }
 
     /**
@@ -105,5 +107,16 @@ class NoticiasController extends Controller
 
         return json_encode($noticia->fav);
         //return "que pacha pepe";
+    }
+
+    public function settags(Request $request)
+    {
+        $ids = $request['ids'];
+        $tagid = $request['tagid'];
+
+        $tag = Tag::findOrFail($tagid);
+        $tag->noticias()->attach($ids);
+
+        return json_encode(True);
     }
 }

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/template.css') }}" />
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="{{ asset('js/functions.js') }}"></script>
 </head>
 <body> 
 

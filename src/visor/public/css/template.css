@@ -106,7 +106,7 @@ td .btn {
 }
 
 .register .register-form .form-control {
-   /* border-radius: 1rem;*/
+    border-radius: 1rem;
 }
 
 .register-left1 img{
@@ -187,4 +187,12 @@ footer {
 
 .table td {
     padding: 0px;
+}
+
+div.custom-checkbox{
+    text-align: left;
+}
+
+input[type=checkbox].check-menu {
+    padding-right: 2px;
 }

@@ -34,4 +34,10 @@ class Noticia extends Model
         //return $conditions;
         return $query->where($conditions)->orderBy('bulletin_date', 'DESC')->paginate(25);
     }    
+
+    // relaciones
+    public function tags()
+    {
+        return $this->belongsToMany('\App\Tag')->withTimestamps();
+    }    
 }
