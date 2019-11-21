@@ -27,13 +27,9 @@ function do_click (e,id)
     });
     
 }
-function send(e)
+
+function getSelected()
 {
-    alert("enviando");
-}
-function clicktag(id)
-{
-    //console.log("Tag click");
     var values = [];
     // Obtener los elementos de la tabla seleccionados. 
     $('.control-check-j').each(
@@ -42,13 +38,94 @@ function clicktag(id)
             if ($(this).is(":checked"))
             {
                 values.push($(this).val());
-                console.log($(this).val());
             }
         }
     );
-    console.debug(values);
+    return values;    
+}
+
+function send(e)
+{
+    alert("enviando");
+}
+
+function selectSingle()
+{
+    var values = getSelected();
+    if (values.length == 0)
+        return true;
+
+    $('.check-menu').prop('checked', false);
+
     $.ajax({
-        data: {"_token": "{{ csrf_token() }}","ids" : values,"tagid":id},
+        data: {"_token": "{{ csrf_token() }}","ids" : values},
+        url: " {{ route('noticias.gettags') }}",
+        type:'POST',
+        dataType: 'json',
+        success: function(data) {
+            for (let item of data)
+            {
+                var name = "#checkMenu-" + item;    
+                $(name).prop('checked', true);            
+            }
+        }
+    });
+}
+
+function markReaded(e,value)
+{
+    e.preventDefault();
+    var values = getSelected();
+    if (values.length == 0)
+        return true;
+
+    $.ajax({
+        data: {"_token": "{{ csrf_token() }}","ids" : values,"value":value},
+        url: " {{ route('noticias.markread') }}",
+        type:'POST',
+        dataType: 'json',
+        success: function(data) {
+            $('.control-check-j').prop('checked', false);
+            var name = "";
+            for (i=0;i< data.length;i++)            
+            {
+                name = "#table-row-id-" + data[i];
+                if (value)
+                {
+                    $(name).removeClass('table-primary');
+                    $(name).addClass('table-default');
+                }
+                else
+                {
+                    $(name).removeClass('table-default');
+                    $(name).addClass('table-primary');
+
+                }
+            }
+        }
+    });
+
+}
+
+function clicktag(id)
+{
+    var values = getSelected();
+    var name = "#checkMenu-" + id;
+    var operation = "";
+    //console.log(name);
+    if(  $(name).is(':checked')  )
+    {
+        console.log("marcar");
+        operation = "mark";
+    }
+    else   
+    {
+        console.log("desmarcar");
+        operation = "demark";
+    }
+
+    $.ajax({
+        data: {"_token": "{{ csrf_token() }}","ids" : values,"tagid":id,"operation":operation},
         url: " {{ route('noticias.settags') }}",
         type:'POST',
         dataType: 'json',
@@ -56,7 +133,6 @@ function clicktag(id)
             $('.control-check-j').prop('checked', false);
             $('.check-menu').prop('checked', false);
             
-            //$("#captureImage").prop('checked', false);
             console.log(data);
         }
     });
@@ -80,8 +156,6 @@ function clicktag(id)
         </div>    
     </div>
 </div>
-
-
 
 <div class="container-fluid ">
 
@@ -123,17 +197,38 @@ function clicktag(id)
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             @foreach ($tags as $tag)
-                <a class="dropdown-item" href="#"><input type="checkbox" class="check-menu" onclick="clicktag({{$tag->id}})" />{{$tag->name}}</a>
+                <a class="dropdown-item" href="#">
+                    <input type="checkbox" class="check-menu" id="checkMenu-{{$tag->id}}" onclick="clicktag({{$tag->id}})" />{{$tag->name}}
+                </a>
             @endforeach
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Aplicar</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Marcar
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#" onclick="markReaded(event,true)">Marcar como leído</a>
+            <a class="dropdown-item" href="#" onclick="markReaded(event,false)">Marcar como no leído</a>
+        </div>
       </li>
+
     </ul>
     <form class="form-inline my-2 my-lg-0">
+    <select name="tag" class="form-control mr-sm-2" id="idTag" onchange="this.form.submit()">
+        <option>Etiquetas</option>
+        @foreach($tags as $tag)
+            <option 
+            @if ($tag->id == $search_tag)
+                selected
+            @endif
+             value="{{$tag->id}}">{{$tag->name}}</option>
+        @endforeach
+    </select>
+
     <select name="destacado" class="form-control mr-sm-2" id="idDestacado" onchange="this.form.submit()">
         <option>Todos</option>
         @foreach($destacadol as $des)
@@ -207,10 +302,10 @@ function clicktag(id)
                 @php ($fav = 'fas fa-star')
             @endif
 
-        <tr class="{{$visto}}">
+        <tr class="{{$visto}}" id="table-row-id-{{$item->id}}">
             <th scope="row">
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input control-check-j" id="tableDefaultCheck{{$item->id}}" value="{{$item->id}}">
+                    <input type="checkbox" class="custom-control-input control-check-j" id="tableDefaultCheck{{$item->id}}" value="{{$item->id}}" onclick="selectSingle()">
                     <label class="custom-control-label" for="tableDefaultCheck{{$item->id}}"> {{$item->id}} </label>
                 </div>
             </th>

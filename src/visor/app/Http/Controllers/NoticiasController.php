@@ -19,21 +19,24 @@ class NoticiasController extends Controller
         $year        = $request->get('bulletin_year');
         $bulletin_no = $request->get('bulletin_no');
         $destacado   = $request->get('destacado');
+        $search_tag  = $request->get('tag');
         //return dd($destacado);
 
         $tags     = Tag::all();
-        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado);
+        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag);
+
         $years    = [2019,2018];
         $boletines=['BOPO', 'DOGA'];
         // Para arreglar paginación
         $noticias->appends(array(
-            'bulletin'=>$bulletin,
-            'bulletin_year'=>$year,
-            'bulletin_no'=>$bulletin_no,
-            'destacado'=>$destacado
+            'bulletin'      => $bulletin,
+            'bulletin_year' => $year,
+            'bulletin_no'   => $bulletin_no,
+            'destacado'     => $destacado,
+            'tag'           => $search_tag
         ));
-
-        return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags'));
+        //return dd($noticias->getEncodedNameAttribute('tag'));
+        return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags','search_tag'));
     }
 
     /**
@@ -120,10 +123,56 @@ class NoticiasController extends Controller
     {
         $ids = $request['ids'];
         $tagid = $request['tagid'];
+        $operation = $request['operation'];
 
-        $tag = Tag::findOrFail($tagid);
-        $tag->noticias()->attach($ids);
+        if ($operation == "mark")
+        {
+            $tag = Tag::findOrFail($tagid);
+            $tmp = $tag->noticias()->whereIn('noticia_id',$ids)->get();
+            foreach($tmp as $i)
+            {
+                unset($ids[array_search($i->id,$ids)]);
+            }
+
+            $tag->noticias()->attach($ids);
+        }
+        if ($operation == "demark")
+        {
+            $tag = Tag::findOrFail($tagid);
+
+            $tag->noticias()->detach($ids);
+
+        }
 
         return json_encode(True);
+    }
+
+    public function gettags(Request $request)
+    {
+        $ids = $request['ids'];
+
+        $res = Noticia::getTagsByNewId($ids);
+        //return dd($res);
+        //$lala = json_encode(array_values($res));
+        //return dd($lala);
+        return json_encode(array_values($res));
+
+    }
+
+    public function markread(Request $request)
+    {
+        $ids = $request['ids'];
+        $value = $request['value'];
+        $readed = 0;
+        if ($value == "true")
+            $readed = 1; 
+
+        foreach($ids as $id)
+        {
+            $noticia = Noticia::findOrFail($id);
+            $noticia->readed = $readed;
+            $noticia->save();
+        }
+        return json_encode($ids);
     }
 }

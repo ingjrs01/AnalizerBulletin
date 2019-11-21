@@ -24,3 +24,7 @@ Route::get('/noticias/{id}/confirm','NoticiasController@confirm')->name('noticia
 Route::post('/noticias/favorite','NoticiasController@favorite')->name('noticias.favorite');
 
 Route::post('/noticias/settags','NoticiasController@settags')->name('noticias.settags');
+
+Route::post('/noticias/gettags','NoticiasController@gettags')->name('noticias.gettags');
+
+Route::post('/noticias/markread','NoticiasController@markread')->name('noticias.markread');

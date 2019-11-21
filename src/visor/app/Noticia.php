@@ -3,12 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Noticia extends Model
 {
-    public function scopeBuscar($query, $bulletin,$bulletin_year, $bulletin_no,$destacado)
+    public function scopeBuscar($query, $bulletin,$bulletin_year, $bulletin_no,$destacado,$tag)
     {
         $conditions = [];
+        $query->select('noticias.id','bulletin','bulletin_year','bulletin_no','bulletin_date','organization','newname','url','fav','notify','readed','noticias.created_at','noticias.updated_at');
 
         if ($bulletin && $bulletin <> "Buscar por boletin")
         {
@@ -30,8 +32,12 @@ class Noticia extends Model
         {
             $conditions[] = ['fav', '=', 0];
         }
+        if ($tag && $tag <> 'Etiquetas')
+        {
+            $query->join('noticia_tag', 'noticias.id', '=', 'noticia_id');
+            $conditions[] = ['tag_id','=',$tag];
+        }
 
-        //return $conditions;
         return $query->where($conditions)->orderBy('bulletin_date', 'DESC')->paginate(25);
     }    
 
@@ -40,4 +46,30 @@ class Noticia extends Model
     {
         return $this->belongsToMany('\App\Tag')->withTimestamps();
     }    
+
+    public static function getTagsByNewId($ids)
+    {
+        $tmp_i = [];
+        $tmp_f = [];
+
+        foreach ($ids as $id)
+        {
+            $tmp = DB::table('noticia_tag')->select('tag_id')->where('noticia_id','=',$id)->get();    
+            $tmp_i = [];
+            if (count($tmp) == 0)
+                return $tmp_f;
+            foreach ($tmp as $item)
+            {
+                $tmp_i [] = $item->tag_id;
+            } 
+            if (count($tmp_f) == 0)
+                foreach ($tmp_i as $i)
+                    $tmp_f [] = $i;
+            else 
+                $tmp_f = array_intersect($tmp_f, $tmp_i);
+        }
+
+        return ($tmp_f);
+    }
+
 }
