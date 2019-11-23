@@ -46,7 +46,8 @@ class Analizer():
 
         return False
 
-    def analize(self,url):
+    def analize(self):
+        url = 'http://deputacionlugo.gal/boletin-oficial-da-provincia-de-lugo/ultimo-bop'
         try: 
             html = urlopen(url)
         except HTTPError as e:
@@ -57,8 +58,13 @@ class Analizer():
         else:
             content = html.read().decode('utf-8', 'ignore')
             res = BeautifulSoup(content,"html.parser")             
-            print(res.find("h2",{"class":"numero"}).getText())
-            numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])
+            #print(res.find("h2",{"class":"numero"}).getText())
+            #numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])
+            div = res.find("div",{"class":"field--name-field-ail-bop-contenido"})
+            print (div)
+            
+
+            return True
             # Obtener el año
             info = res.find("span",{"class":"fecha"}).getText().split()
             year = int(info[len(info)-4])
@@ -161,11 +167,7 @@ class Analizer():
 
     def run(self): 
         #self.registerListener()
-        l = self.urlGenerator()
-        for item in l:
-            self.analize(item)
-
-
+        self.analize()
         self.getData()
 
     # Función experimental. para sacar las urls de las distintas secciones    
