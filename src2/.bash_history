@@ -112,3 +112,120 @@ cd /root/
 ls
 python3 analizerXunta.py 3
 exit
+cd /root/
+ls
+python3 analizerXunta.py 
+python3 analizerXunta.py 
+python3 analizerXunta.py 
+python3 analizerXunta.py 
+python3 analizerXunta.py 
+python3 analizerXunta.py 
+LS
+LS
+ls
+cp analizerXunta.py analizerPruebas.py
+python analizerPruebas.py 
+python analizerPruebas.py 
+python analizerPruebas.py 
+python analizerPruebas.py 
+python analizerPruebas.py 
+python analizerPruebas.py 
+python analizerPruebas.py 
+python analizerPruebas.py 
+python analizerPruebas.py 
+ls
+python analizerXunta.py 2
+python analizerXunta.py 2
+python analizerXunta.py 20
+python analizerXunta.py 2
+python analizerXunta.py 2
+python analizerXunta.py 9
+python analizerXunta.py 5
+python analizerXunta.py 10
+python analizerXunta.py 20
+python analizerXunta.py 15
+python analizerXunta.py 19
+python analizerXunta.py 19
+python analizerXunta.py 1
+python analizerXunta.py 19
+python analizerXunta.py 1
+python3 analizerXunta.py 1
+ls
+ls
+python3 analizerXunta.py 1
+python3 analizerXunta.py 19
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
+python3 analizerCoruna.py 
+python3 analizerCoruna.py 3
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerXunta.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+cd /root/
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+python3 analizerCoruna.py 1
+ls
+python3
+ls
+cd /root/
+ls
+python3 analizerXunta.py 
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
+python3 analizerXunta.py 1
