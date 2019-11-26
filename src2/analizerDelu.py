@@ -48,6 +48,7 @@ class Analizer():
 
     def analize(self):
         url = 'http://deputacionlugo.gal/boletin-oficial-da-provincia-de-lugo/ultimo-bop'
+        url = 'http://deputacionlugo.gal/gl/node/72645'
         try: 
             html = urlopen(url)
         except HTTPError as e:
@@ -57,54 +58,79 @@ class Analizer():
             print(u)
         else:
             content = html.read().decode('utf-8', 'ignore')
-            res = BeautifulSoup(content,"html.parser")             
-            #print(res.find("h2",{"class":"numero"}).getText())
-            #numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])
-            div = res.find("div",{"class":"field--name-field-ail-bop-contenido"})
-            print (div)
-            
+            res = BeautifulSoup(content,"html.parser")
 
-            return True
-            # Obtener el año
-            info = res.find("span",{"class":"fecha"}).getText().split()
-            year = int(info[len(info)-4])
-            mes = self.__meses.index(info[len(info)-6]) + 1 # El array comienza en 0
-            dia = int(info[len(info)-8])
-            fecha = date(year, mes, dia)
+            # Vamos a por el número: 
+            grupo_codigo = res.find('div',{"class":"field--name-field-ail-codigo"})
+            numero = int(grupo_codigo.find('div',{'class','field__item'}).getText())
+            grupo_codigo = res.find('div',{'class','field--name-field-ail-bop-fecha-publicacion'})
+            sfecha = grupo_codigo.find('div',{'class':'field__item'}).getText().split()
+            dia = int(sfecha[1])
+            mes = self.__meses.index(sfecha[3].lower()) + 1 
+            anio = int(sfecha[5])
+            fecha = date(anio,mes,dia)
+            if (self.checkNumber(anio,numero,"BOPLU") == False):
+                div = res.find("div",{"class":"field--name-field-ail-bop-contenido"})
+                lista = div.find("ul")
+                secciones = lista.children
+                for seccion in secciones: 
+                    if hasattr(seccion, 'strong'):                    
+                        seccion_nombre = seccion.strong.getText()
 
-            if (self.checkNumber(year,500,"BOPO") == False):
-                grupo = res.findAll("ul",{"class":"listadoSumario"})
+                    if (not hasattr(seccion, 'children')):                    
+                        continue
+                        
+                    lista = seccion.findChildren("ul" , recursive=False)
+                    for elemento in lista:  
+                        organismos = elemento.children
+                        for organismo in organismos:
+                            if hasattr(organismo, 'strong'):                    
+                                v_concello = organismo.strong.getText()
 
-                for tag in grupo:
-                    organismo = tag.findPrevious('p',{"class":"Org"}).getText()
-                    seccion = tag.findPrevious('h4',{"class":"tit"}).getText()
-                    # Busco los elementos anteriores                    
-                    lis = tag.findAll("li")
-                    for li in lis:
-                        noticia = Noticia()
-                        noticia.bulletin = "BOPO"
-                        noticia.bulletin_year = year
-                        noticia.bulletin_no = numero
-                        noticia.bulletin_date = fecha
-                        noticia.created_at = datetime.now()
-                        noticia.updated_at = datetime.now()
-                        noticia.seccion   = seccion
-                        noticia.autonomia = ""
-                        noticia.organismo = organismo
-                        noticia.organo    = li.span.getText()
-                        noticia.servicio  = ""        
+                            if hasattr(organismo, 'ul'):
+                                noticias = organismo.ul.children
+                                for noticia_v in noticias:                     
+                                    if hasattr(noticia_v,"a"):
+                                        noticia = Noticia()
+                                        noticia.bulletin = "BOPLU"
+                                        noticia.bulletin_year = anio
+                                        noticia.bulletin_no = numero
+                                        noticia.bulletin_date = fecha
+                                        noticia.created_at = datetime.now()
+                                        noticia.updated_at = datetime.now()
+                                        noticia.seccion   = seccion_nombre
+                                        noticia.autonomia = ""
+                                        noticia.organismo = v_concello
+                                        noticia.organo    = v_concello
+                                        noticia.servicio  = ""        
+                                        noticia.organization = v_concello
+                                        noticia.newname = noticia_v.a.getText()
 
-                        noticia.organization = li.span.getText()
-                        noticia.newname = li.p.getText()
-                        if (self.isNotificable(noticia.newname)):
-                            noticia.notify = 1
+                                        if (self.isNotificable(noticia.newname)):
+                                            noticia.notify = 1
 
-                        noticia.url = "https://boppo.depo.gal" + li.a['href']
-                        noticia.imprimir()
-                        #noticia.save()
-                        ##self.insertLine("BOPO",numero,year ,cabecera,titulo,uri,notify,fecha)
+                                        noticia.url = "https://boppo.depo.gal" + noticia_v.a['href']
+                                        self.normalizar(noticia)
+                                        noticia.imprimir()
+                                        #noticia.save()
             else:
                 print ("Paso al siguiente")
+
+    def normalizar(self,noticia):
+        if (noticia.seccion == "XUNTA DE GALICIA"):
+            noticia.seccion = "Administración Autonómica"
+            noticia.organismo = "Xunta de Galicia"
+        if (noticia.seccion == "EXCMA. DEPUTACIÓN PROVINCIAL DE LUGO"):
+            noticia.seccion = 'Administración Local'
+            noticia.organismo = "Deputación de Lugo"        
+        if (noticia.seccion == "CONCELLOS"):
+            noticia.seccion = 'Administración Local'
+            noticia.organo = ""
+            noticia.servicio = ""
+        if (noticia.seccion == "MINISTERIO PARA A TRANSICIÓN ECOLÓXICA"):
+            noticia.organismo = noticia.seccion
+            noticia.seccion = "Administración Estatal"
+            
 
     
     def getData(self):

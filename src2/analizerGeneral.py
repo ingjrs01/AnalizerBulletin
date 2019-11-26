@@ -6,14 +6,12 @@ from urllib.error import HTTPError
 from urllib.error import URLError
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
-from noticiasm import Noticia
 
 import pymysql
 import telebot
 import sys
 import re
 import configparser
-
 
 class Analizer(): 
 
@@ -23,7 +21,7 @@ class Analizer():
 
         self.__days = numero
         self.__tb = telebot.TeleBot(config['General']['TOKEN'])
-        self.__meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'] 
+        self.__meses = ['xaneiro','febreiro','marzo','abril','maio','xuño','xullo','agosto','setembro','outubro','novembro','decembro'] 
 
         self.__loadDBConnection()
         try:
@@ -36,10 +34,10 @@ class Analizer():
         self.__user      = "root"
         self.__db        = "analizerdb"
         self.__password  = "test"
-        self.__tablename = "entry"
+        self.__tablename = "noticias"
     
     # Busca si la noticia contiene una serie de palabras
-    def isNotificable(self, new):
+    def isNotificable(selft, new):
         words = ['OPOSICIÓN', 'SELECTIVOS', 'FUNCIONARIO','EMPREGO']
         for word in words:
             if (word in new):
@@ -47,7 +45,7 @@ class Analizer():
 
         return False
 
-    def analize(self,url):
+    def analizeWebDepo(self,url):
         try: 
             html = urlopen(url)
         except HTTPError as e:
@@ -57,51 +55,87 @@ class Analizer():
             print(u)
         else:
             content = html.read().decode('utf-8', 'ignore')
-            res = BeautifulSoup(content,"html.parser")      
+            res = BeautifulSoup(content,"html.parser")             
+            print(res.find("h2",{"class":"numero"}).getText())
+            numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])
+            # Obtener el año
+            info = res.find("span",{"class":"fecha"}).getText().split()
+            year = int(info[len(info)-4])
+            mes = self.__meses.index(info[len(info)-6]) + 1 # El array comienza en 0
+            dia = int(info[len(info)-8])
+            fecha = date(year, mes, dia)
 
-            info = res.find("div",{"id":"infoBoletin"}).find("a").getText()
-            cachos = info.split()
-            numero = int(cachos[4])
-            dia = int(cachos[7])
-            mes = self.__meses.index(cachos[9]) + 1
-            ano = int(cachos[11])
-            fecha = date(ano,mes,dia)
-            print (fecha)
+            if (self.checkNumber(year,numero,"BOPO") == False):
+                tags = res.findAll("ul",{"class":"listadoSumario"})
 
-            anuncios = res.findAll("div",{"class":"bloqueAnuncio"})
-            for anuncio in anuncios: 
-                noticia = Noticia()
-                noticia.bulletin = "BOPCO"
-                noticia.bulletin_year = ano
-                noticia.bulletin_no = numero
-                noticia.bulletin_date = fecha                
-                
-                if (anuncio.find("h2")):
-                    noticia.organismo = anuncio.find("h2").getText()
-                    noticia.organo = anuncio.find("h3").getText()
-                    noticia.servicio = anuncio.find("h4").getText()
-                else:
-                    noticia.organismo = anuncio.find("h3").getText()
-                    if (anuncio.find("h4")):
-                        noticia.organo = anuncio.find("h4").getText()
+                for tag in tags:
+                    lis = tag.findAll("li")
+                    for li in lis: 
+                        cabecera = li.span.getText()
+                        titulo   = li.p.getText()
+                        if (self.isNotificable(titulo)):
+                            notify = 1
+                        else:
+                            notify = 0
 
-                    noticia.servicio = "N/D"
-                noticia.seccion = anuncio.findPrevious('h1',{"class":"administracion"}).getText()
-                
-                resumen = anuncio.find("p",{"class":"resumenSumario"})
-                noticia.url = "https://bop.dacoruna.gal/bopportal/publicado/" + str(ano) + "/" + str(mes) + "/" + str(dia) + "/" + resumen.select("a")[0]['href']
-                noticia.newname = resumen.select("a")[0].getText().strip() + " - " + resumen.select("a")[1].getText().strip()
-                # la notificación hay que comprobarla
-                if (self.isNotificable(noticia.newname)):
-                    noticia.notify = 1
-                #noticia.organization = ""
-                noticia.fav = 0
-                noticia.readed = 0
-                noticia.created_at = datetime.now()
-                noticia.updated_at = datetime.now()
-                noticia.imprimir()
-                #noticia.save()
+                        uri      = "https://boppo.depo.gal" + li.a['href']
+                        self.insertLine("BOPO",numero,year ,cabecera,titulo,uri,notify,fecha)
+            else:
+                print ("Paso al siguiente")
 
+    def analizeWebXunta(self,url):
+        try: 
+            html = urlopen(url)
+        except HTTPError as e:
+            print(e)
+        except URLError:
+            print("Servidor no encontrado")
+        else:        
+            content = html.read().decode('utf-8', 'ignore')
+            res = BeautifulSoup(content,"html.parser")
+            info = res.find("div",{"id":"publicacionInfo"})
+            numero = int(info.span.getText().split()[1]) 
+            # obtener el año. 
+            info = res.find("span",{"id":"DOGData"})
+            temp = info.getText().split()
+            year = int(temp[len(temp)-1])
+            mes = self.__meses.index(temp[len(temp)-3]) + 1
+            dia = int(temp[len(temp)-5])
+            fecha = date(year,mes,dia)
+
+            if  (self.checkNumber(year, numero,"DOGA") == False):
+                sections = res.findAll("div",{"id":re.compile('secciones*')})
+                for section in sections:
+                    lines = section.findAll("li")
+                    for line in lines:
+                        if (line.a is not None): 
+                            cabecera = "N/D"
+                            titulo   = line.a.getText() # laalala
+                            uri      = "https://www.xunta.gal" + line.a['href'] 
+                            self.insertLine("DOGA",numero, year, cabecera,titulo,uri,1,fecha)
+            else: 
+                print ("Pasando Xunta")
+
+    def insertLine(self, bulletin, bulletin_no, bulletin_year,heading, title, urline, notify,fecha):
+        cursor = self.__db.cursor()
+        sql = "INSERT INTO " + self.__tablename
+        sql += "(bulletin,bulletin_year, bulletin_no, organization, newname, url,fav , notify, readed,created_at,bulletin_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)"
+        organization = heading
+        newname = title
+        url = urline
+        readed = 0
+        fav = 0
+        created = datetime.now()
+        recordTuple = (bulletin, bulletin_year, bulletin_no, organization, newname, url,fav ,notify, readed,created,fecha)
+         
+        try:
+           cursor.execute(sql,recordTuple)
+           self.__db.commit()
+        except Error as e:
+           self.__db.rollback()
+           print("No se ha podido introducir el dato: ")
+        #self.__db.close()
+    
     def getData(self):
         cursor = self.__db.cursor()
 
@@ -122,7 +156,7 @@ class Analizer():
             print("Error actualizando las filas vistas")
         
 
-    def checkNumber(self,year, numero, bulletin): 
+    def checkNumber(self,year, numero, bulletin):             
         cursor = self.__db.cursor()
         sql = "SELECT * FROM " + self.__tablename + " WHERE bulletin_no = %s AND bulletin_year = %s AND bulletin = %s "
         cursor.execute(sql,(numero,year,bulletin))
@@ -177,32 +211,17 @@ class Analizer():
 
         return urls
 
-    def urlGeneratorDeco(self): 
-        urls = ["https://bop.dacoruna.gal/bopportal/ultimoBoletin.do"]
-        hoy = datetime.now()
-        tempdate = hoy
-        for i in range(1,self.__days):
-            tempdate = tempdate - timedelta(days=1)
-            if (tempdate.weekday() not in [5,6]): 
-                url = "https://bop.dacoruna.gal/bopportal/cambioBoletin.do?fechaInput=" + str(tempdate.day) + "/" + format(tempdate.month, '02') + "/" + format(tempdate.year, '04')
-                urls.append(url)
-
-        return urls
-
-
     def run(self): 
         #self.registerListener()
-        lista = self.urlGeneratorDeco()
-        for item in lista:
-            print(item)
-            self.analize(item)
-            #self.analizeWebDepo(item)
+        l = self.urlGeneratorDepo()
+        for item in l:
+            self.analizeWebDepo(item)
 
-        #l2 = self.urlGeneratorXunta()
-        #for item in l2:
-        #    self.analizeWebXunta(item)
+        l2 = self.urlGeneratorXunta()
+        for item in l2:
+            self.analizeWebXunta(item)
 
-        #self.getData()
+        self.getData()
 
     def log(self, msg):
         print(type(msg))

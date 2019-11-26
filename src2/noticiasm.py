@@ -27,7 +27,6 @@ class Noticia():
         self.updated_at = datetime.now()
         # Campos nuevos
         self.seccion   = ""
-        self.autonomia = ""
         self.organismo = ""
         self.organo    = ""
         self.servicio  = ""        
@@ -49,7 +48,6 @@ class Noticia():
 
     def imprimir(self):
         print ("Sección: "   + self.seccion)
-        print ("Autonomía: " + self.autonomia)
         print ("Organismo: " + self.organismo)
         print ("Órgano: "    + self.organo)
         print ("Servicio: "  + self.servicio)

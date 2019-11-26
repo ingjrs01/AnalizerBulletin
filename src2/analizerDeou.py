@@ -53,12 +53,8 @@ class Analizer():
         fechas = self.urlGenerator()
         for f in fechas:
             print (url + "   ." + f + ".")
-        #return True
 
         for fecha in fechas: 
-            print('')
-            print('==========================================================================================')
-            print (" ====> Analizando " + fecha)
             post_params = {'fechaInput':fecha}
             response = requests.post(url, data=post_params)   
             res = BeautifulSoup(response.text, 'html.parser')    
@@ -77,30 +73,34 @@ class Analizer():
                 for elemento in grupo:
                     noticia = Noticia()
                     noticia.newname = elemento.getText().strip()
-                    noticia.organo = elemento.findPrevious('span',{"class":"tituloS"}).getText()
+                    noticia.organismo = elemento.findPrevious('span',{"class":"tituloS"}).getText()
                     noticia.seccion = elemento.findPrevious('span',{"class":"seccionS"}).getText()
                     noticia.bulletin = "BOPOU"
                     noticia.bulletin_year = year
                     noticia.bulletin_no = numero
                     noticia.bulletin_date = fecha
-                    noticia.servicio  = "N/D"
-                    noticia.autonomia = "N/D"
-                    noticia.organismo = "???"
-                    noticia.organization = "???"
+                    noticia.servicio  = ""
                     noticia.url = v_url
                     noticia.created_at = datetime.now()
                     noticia.updated_at = datetime.now()
                     if (self.isNotificable(noticia.newname)):
                         noticia.notify = 1
 
+                    self.normalizar(noticia)
                     noticia.imprimir()
-                    noticia.save()
+                    #noticia.save()
             else:
                 print ("Paso al siguiente")
             print ("Esperando")
             time.sleep(10)
             print("Reanudando")
 
+    def normalizar(self,noticia):
+        if (noticia.seccion == "IV. ENTIDADES LOCAIS"):
+            noticia.seccion = "Administración Local"
+
+        if (noticia.seccion == "V. TRIBUNAIS E XULGADOS"):
+            noticia.seccion = " ADMINISTRACIÓN DE XUSTIZA"
     
     def getData(self):
         cursor = self.__db.cursor()

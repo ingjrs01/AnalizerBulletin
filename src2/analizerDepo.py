@@ -56,17 +56,15 @@ class Analizer():
             print(u)
         else:
             content = html.read().decode('utf-8', 'ignore')
-            res = BeautifulSoup(content,"html.parser")             
-            print(res.find("h2",{"class":"numero"}).getText())
-            numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])
-            # Obtener el año
+            res = BeautifulSoup(content,"html.parser")                         
+            numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])            
             info = res.find("span",{"class":"fecha"}).getText().split()
             year = int(info[len(info)-4])
             mes = self.__meses.index(info[len(info)-6]) + 1 # El array comienza en 0
             dia = int(info[len(info)-8])
             fecha = date(year, mes, dia)
 
-            if (self.checkNumber(year,500,"BOPO") == False):
+            if (self.checkNumber(year,numero,"BOPO") == False):
                 grupo = res.findAll("ul",{"class":"listadoSumario"})
 
                 for tag in grupo:
@@ -83,7 +81,7 @@ class Analizer():
                         noticia.created_at = datetime.now()
                         noticia.updated_at = datetime.now()
                         noticia.seccion   = seccion
-                        noticia.autonomia = ""
+                        #noticia.autonomia = ""
                         noticia.organismo = organismo
                         noticia.organo    = li.span.getText()
                         noticia.servicio  = ""        
@@ -94,11 +92,28 @@ class Analizer():
                             noticia.notify = 1
 
                         noticia.url = "https://boppo.depo.gal" + li.a['href']
+                        self.normalizar(noticia)
                         noticia.imprimir()
                         #noticia.save()
                         ##self.insertLine("BOPO",numero,year ,cabecera,titulo,uri,notify,fecha)
             else:
                 print ("Paso al siguiente")
+
+    def normalizar(self,noticia):
+        if (noticia.seccion == "XUNTA DE GALICIA"):
+            noticia.servicio = noticia.organo
+            noticia.organo = noticia.organismo
+            noticia.organismo = "Xunta de Galicia"
+            noticia.seccion = "Administración Autonómica"
+        if (noticia.organo == "Deputación Provincial"):
+            noticia.organismo = "Deputación de Pontevedra"
+            noticia.organo = ""
+            noticia.servicio = ""
+        if (noticia.organismo == "Municipal"):
+            noticia.organismo = noticia.organo
+            noticia.organo = ""  
+            noticia.servicio = ""
+        
 
     
     def getData(self):
