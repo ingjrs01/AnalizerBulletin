@@ -10,7 +10,7 @@ class Noticia extends Model
     public function scopeBuscar($query, $bulletin,$bulletin_year, $bulletin_no,$destacado,$tag)
     {
         $conditions = [];
-        $query->select('noticias.id','bulletin','bulletin_year','bulletin_no','bulletin_date','organization','newname','url','fav','notify','readed','noticias.created_at','noticias.updated_at');
+        $query->select('noticias.id','bulletin','bulletin_year','bulletin_no','seccion','organismo','organo','bulletin_date','organization','newname','url','fav','notify','readed','noticias.created_at','noticias.updated_at');
 
         if ($bulletin && $bulletin <> "Buscar por boletin")
         {

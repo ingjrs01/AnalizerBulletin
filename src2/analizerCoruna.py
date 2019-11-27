@@ -10,12 +10,11 @@ from noticiasm import Noticia
 
 import pymysql
 import telebot
-import sys
 import re
 import configparser
 
 
-class Analizer(): 
+class AnalizerCoruna(): 
 
     def __init__(self,numero):
         config = configparser.ConfigParser()
@@ -36,7 +35,7 @@ class Analizer():
         self.__user      = "root"
         self.__db        = "analizerdb"
         self.__password  = "test"
-        self.__tablename = "entry"
+        self.__tablename = "noticias"
     
     # Busca si la noticia contiene una serie de palabras
     def isNotificable(self, new):
@@ -68,6 +67,9 @@ class Analizer():
             fecha = date(ano,mes,dia)
             print (fecha)
 
+            if (self.checkNumber(ano,numero,"BOPCO")):
+                return True # Ya existen. 
+
             anuncios = res.findAll("div",{"class":"bloqueAnuncio"})
             for anuncio in anuncios: 
                 noticia = Noticia()
@@ -94,13 +96,12 @@ class Analizer():
                 # la notificación hay que comprobarla
                 if (self.isNotificable(noticia.newname)):
                     noticia.notify = 1
-                #noticia.organization = ""
                 noticia.fav = 0
                 noticia.readed = 0
                 noticia.created_at = datetime.now()
                 noticia.updated_at = datetime.now()
                 noticia.imprimir()
-                #noticia.save()
+                noticia.save()
 
     def getData(self):
         cursor = self.__db.cursor()
@@ -229,13 +230,5 @@ class Analizer():
                         urls_in.append("https://www.xunta.gal/diario-oficial-galicia/" + li.a['href'])
         return urls_in
 
-# Seccion principal a ejecutar.
-num_days = 1
-if (len(sys.argv) > 1):
-    print ("Cuantos dias analizar: " + sys.argv[1])
-    num_days = int(sys.argv[1])
-
-p = Analizer(num_days)
-p.run()
-
-
+    def prueba(self):
+        print ("Analizando desde Coruña")

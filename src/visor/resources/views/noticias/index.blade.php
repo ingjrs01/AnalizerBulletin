@@ -281,14 +281,16 @@ function clicktag(id)
                 <label class="custom-control-label" for="tableDefaultCheck">#</label>
             </div>
         </th>
-        <th scope="col" style="width: 35%">Noticia</th>
+        <th scope="col" style="width: 33%">Noticia</th>
         <th scope="col">Boletín</th>
         <th scope="col">Nº</th>
         <th scope="col">Año</th>
-        <th scope="col" style="width: 20%">Organización</th>
-        <th scope="col">F. Boletín</th>
-        <th scope="col">Creación</th>
-        <th scope="col">Acción</th>
+        <!--<th scope="col" style="width: 20%">Organización</th>-->
+        <th scope="col" style="width: 10%">Sección</th>
+        <th scope="col" style="width: 10%">Organismo</th>
+        <th scope="col" style="width: 12%">Órgano</th>
+        <th scope="col">Fecha</th>
+        <th scope="col" style="width: 10%">Acción</th>
     </tr>
     </thead>
     <tbody>
@@ -313,9 +315,10 @@ function clicktag(id)
             <td>{{ $item->bulletin  }}</td>
             <td>{{ $item->bulletin_no  }}</td>
             <td>{{ $item->bulletin_year  }}</td>
-            <td>{{ $item->organization  }}</td>
+            <td>{{ $item->seccion  }}</td>
+            <td>{{ $item->organismo  }}</td>
+            <td>{{ $item->organo  }}</td>
             <td>{{ $item->bulletin_date  }}</td>
-            <td>{{ $item->created_at  }}</td>
             <td> 
                 <a href="#" onclick="do_click(event,{{$item->id}})" class="btn btn-info btncolorblanco" >
                     <i class="{{$fav}}" id="cfav-{{$item->id}}"></i>  

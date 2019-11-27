@@ -44,7 +44,7 @@ class Noticia():
         self.__user      = "root"
         self.__db        = "analizerdb"
         self.__password  = "test"
-        self.__tablename = "entry"
+        self.__tablename = "noticias"
 
     def imprimir(self):
         print ("Sección: "   + self.seccion)
@@ -57,10 +57,11 @@ class Noticia():
     def save(self):
         cursor = self.__db.cursor()
         sql = "INSERT INTO " + self.__tablename
-        sql += "(bulletin,bulletin_year, bulletin_no, organization, newname, url,fav , notify, readed,created,bulletin_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)"
-        #created = datetime.now()
-        recordTuple = (self.bulletin, self.bulletin_year, self.bulletin_no, self.organization, self.newname, self.url,self.fav ,self.notify, self.readed,self.created_at,self.bulletin_date)
-         
+        sql += "(bulletin, bulletin_year, bulletin_no, bulletin_date, seccion, organismo, organo, servicio, organization, newname,"
+        sql += " url, fav, notify, readed, created_at, updated_at)"
+        sql += " VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s,%s)"
+
+        recordTuple = (self.bulletin, self.bulletin_year, self.bulletin_no, self.bulletin_date, self.seccion, self.organismo, self.organo, self.servicio, self.organization, self.newname, self.url, self.fav, self.notify, self.readed, self.created_at, self.updated_at)
         try:
            cursor.execute(sql,recordTuple)
            self.__db.commit()

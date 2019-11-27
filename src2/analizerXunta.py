@@ -1,19 +1,19 @@
 #!/usr/bin/python3
-
 from datetime import datetime
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from urllib.error import URLError
 from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
+from noticiasm import Noticia
+from analizer import Analizer
 
 import pymysql
 import telebot
-import sys
 import re
 import configparser
 
-class Analizer(): 
+class AnalizerXunta(Analizer): 
 
     def __init__(self,numero):
         config = configparser.ConfigParser()
@@ -45,45 +45,7 @@ class Analizer():
 
         return False
 
-    def analizeWebDepo(self,url):
-        try: 
-            html = urlopen(url)
-        except HTTPError as e:
-            print(e)
-        except URLError as u:
-            print("Servidor depo no encontrado " + url)
-            print(u)
-        else:
-            content = html.read().decode('utf-8', 'ignore')
-            res = BeautifulSoup(content,"html.parser")             
-            print(res.find("h2",{"class":"numero"}).getText())
-            numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])
-            # Obtener el año
-            info = res.find("span",{"class":"fecha"}).getText().split()
-            year = int(info[len(info)-4])
-            mes = self.__meses.index(info[len(info)-6]) + 1 # El array comienza en 0
-            dia = int(info[len(info)-8])
-            fecha = date(year, mes, dia)
-
-            if (self.checkNumber(year,numero,"BOPO") == False):
-                tags = res.findAll("ul",{"class":"listadoSumario"})
-
-                for tag in tags:
-                    lis = tag.findAll("li")
-                    for li in lis: 
-                        cabecera = li.span.getText()
-                        titulo   = li.p.getText()
-                        if (self.isNotificable(titulo)):
-                            notify = 1
-                        else:
-                            notify = 0
-
-                        uri      = "https://boppo.depo.gal" + li.a['href']
-                        self.insertLine("BOPO",numero,year ,cabecera,titulo,uri,notify,fecha)
-            else:
-                print ("Paso al siguiente")
-
-    def analizeWebXunta(self,url):
+    def analize(self,url):
         try: 
             html = urlopen(url)
         except HTTPError as e:
@@ -108,34 +70,112 @@ class Analizer():
                 for section in sections:
                     lines = section.findAll("li")
                     for line in lines:
-                        if (line.a is not None): 
-                            cabecera = "N/D"
-                            titulo   = line.a.getText() # laalala
-                            uri      = "https://www.xunta.gal" + line.a['href'] 
-                            self.insertLine("DOGA",numero, year, cabecera,titulo,uri,1,fecha)
+                        if (line.a is not None):
+                            noticia = Noticia()
+                            noticia.bulletin = "DOGA"
+                            noticia.bulletin_year = year
+                            noticia.bulletin_no = numero
+                            noticia.bulletin_date = fecha
+                            noticia.seccion   = ""
+                            noticia.organismo = line.findPrevious('p',{'class':'dog-toc-organismo'}).getText()
+                            noticia.organo    = ""  #li.span.getText()
+                            noticia.servicio  = ""        
+                            noticia.newname = line.a.getText()
+                            noticia.url = "https://www.xunta.gal" + line.a['href'] 
+                            self.normalizar(noticia)
+                            pseccion =  line.findPrevious('p',{'class':'dog-toc-nivel-2'})
+                            if (pseccion is not None):                                
+                                if (pseccion.getText() == 'c) Outros anuncios'):
+                                    noticia.seccion = 'SECCIÓN NON OFICIAL'
+                            if (self.isNotificable(noticia.newname)):
+                                noticia.notify = 1
+                            noticia.fav = 0
+                            noticia.readed = 0
+                            noticia.created_at = datetime.now()
+                            noticia.updated_at = datetime.now()
+                            noticia.imprimir()
+                            noticia.save()
             else: 
                 print ("Pasando Xunta")
 
-    def insertLine(self, bulletin, bulletin_no, bulletin_year,heading, title, urline, notify,fecha):
-        cursor = self.__db.cursor()
-        sql = "INSERT INTO " + self.__tablename
-        sql += "(bulletin,bulletin_year, bulletin_no, organization, newname, url,fav , notify, readed,created_at,bulletin_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)"
-        organization = heading
-        newname = title
-        url = urline
-        readed = 0
-        fav = 0
-        created = datetime.now()
-        recordTuple = (bulletin, bulletin_year, bulletin_no, organization, newname, url,fav ,notify, readed,created,fecha)
-         
-        try:
-           cursor.execute(sql,recordTuple)
-           self.__db.commit()
-        except Error as e:
-           self.__db.rollback()
-           print("No se ha podido introducir el dato: ")
-        #self.__db.close()
-    
+    def normalizar(self,noticia): 
+        if "Xulgado" in noticia.organismo:
+            noticia.seccion = 'ADMINISTRACIÓN DE XUSTIZA'
+            noticia.organismo = noticia.organismo.upper()
+
+        if "Concello" in noticia.organismo:
+            noticia.seccion = 'ADMINISTRACIÓN LOCAL'
+            noticia.organismo = noticia.organismo.upper()
+
+        if "Deputación" in noticia.organismo:             
+            noticia.seccion = 'ADMINISTRACIÓN LOCAL'
+            noticia.organismo = noticia.organismo.upper()
+
+        if "Consellería" in noticia.organismo:
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organo = noticia.organismo.upper()
+            noticia.organismo = 'XUNTA DE GALICIA'
+
+        if "Universidade" in noticia.organismo: 
+            noticia.seccion = "UNIVERSIDADES"
+            noticia.organismo = noticia.organismo.upper()
+
+        if "Augas de Galicia" in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE INFRAESTRUTURAS E MOBILIDADE'
+            noticia.servicio = 'AUGAS DE GALICIA'
+
+        if "Axencia Galega de Infraestruturas" in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE INFRAESTRUTURAS E MOBILIDADE'
+            noticia.servicio = 'AXENCIA GALEGA DE INFRAESTRUCTURAS'
+
+        if "Escola Galega de Administración Pública" in noticia.organismo:
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'VICEPRESIDENCIA E CONSELLERÍA DE PRESIDENCIA, ADMINISTRACIÓNS PÚBLICAS E XUSTIZA'
+            noticia.servicio = "ESCOLA GALEGA DE ADMINISTRACIÓN PÚBLICA"
+
+        if 'Fondo Galego de Garantía Agraria' in noticia.organismo:
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DO MEDIO RURAL'
+            noticia.servicio = 'FONDO GALEGO DE GARANTÍA AGRARIA'
+
+        if 'Servizo Galego de Saúde' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE SANIDADE'
+            noticia.servicio = 'SERVIZO GALEGO DE SAÚDE'
+
+        if 'Axencia Turismo de Galicia' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE CULTURA E TURISMO'
+            noticia.servicio = 'AXENCIA TURISMO DE GALICIA'
+
+        if 'Servizo de Emprego e Economía Social' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE ECONOMÍA, EMPREGO E INDUSTRIA'
+            noticia.servicio = 'SERVIZO DE EMPREGO E ECONOMÍA SOCIAL'
+
+        if 'Axencia de Protección da Legalidade Urbanística' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE  MEDIO AMBIENTE, TERRITORIO E VIVENDA'
+            noticia.servicio = 'AXENCIA DE PROTECCIÓN DA LEGALIDADE URBANÍSTICA'
+
+        if 'Portos de Galicia' in noticia.organismo:
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DO MAR'
+            noticia.servicio = 'PORTOS DE GALICIA'
+
+        return True
+        
     def getData(self):
         cursor = self.__db.cursor()
 
@@ -199,34 +239,13 @@ class Analizer():
 
         return urls
 
-    def urlGeneratorDepo(self): 
-        urls = ["https://boppo.depo.gal/web/boppo"]
-        hoy = datetime.now()
-        tempdate = hoy
-        for i in range(1,self.__days):
-            tempdate = tempdate - timedelta(days=1)
-            if (tempdate.weekday() not in [5,6]): 
-                url = "https://boppo.depo.gal/detalle/-/boppo/" + str(tempdate.year) + "/" + format(tempdate.month, '02') + "/" + format(tempdate.day, '02')
-                urls.append(url)
-
-        return urls
-
     def run(self): 
         #self.registerListener()
-        l = self.urlGeneratorDepo()
-        for item in l:
-            self.analizeWebDepo(item)
-
         l2 = self.urlGeneratorXunta()
         for item in l2:
-            self.analizeWebXunta(item)
+            self.analize(item)
 
         self.getData()
-
-    def log(self, msg):
-        print(type(msg))
-        if (type(msg) != bytes):
-            print (msg.encode("utf-8", errors="ignore"))
 
     # Función experimental. para sacar las urls de las distintas secciones    
     def analizarPrincipal(self, url): 
@@ -244,17 +263,19 @@ class Analizer():
             lis = index.findAll("li",{"class","dog-toc-sumario"})
             for li in lis:
                 if (li.a is not None):
-                    if (li.a.getText().find('concursos') > 0):
+                    if (li.a['href'].find("#") < 0):
                         urls_in.append("https://www.xunta.gal/diario-oficial-galicia/" + li.a['href'])
         return urls_in
 
-# Seccion principal a ejecutar.
-num_days = 1
-if (len(sys.argv) > 1):
-    print ("Cuantos dias analizar: " + sys.argv[1])
-    num_days = int(sys.argv[1])
+    def prueba(self):
+        print ("Analizador de la Xunta")
 
-p = Analizer(num_days)
-p.run()
+#num_days = 1
+#if (len(sys.argv) > 1):
+#    print ("Cuantos dias analizar: " + sys.argv[1])
+#    num_days = int(sys.argv[1])
+#
+#p = AnalizerXunta(num_days)
+#p.run()
 
 

@@ -19,6 +19,10 @@ class CreateNoticiasTable extends Migration
             $table->smallInteger('bulletin_year');
             $table->integer('bulletin_no');
             $table->date('bulletin_date');
+            $table->string('seccion',100);
+            $table->string('organismo',250);
+            $table->string('organo',250);
+            $table->string('servicio',250);
             $table->string('organization',150);
             $table->string('newname',1000);
             $table->string('url',250);

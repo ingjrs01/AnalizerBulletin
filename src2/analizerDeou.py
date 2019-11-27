@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 from datetime import datetime
 from urllib.request import urlopen
 from urllib.error import HTTPError
@@ -10,13 +8,12 @@ from noticiasm import Noticia
 
 import pymysql
 import telebot
-import sys
 import re
 import configparser
 import requests
 import time
 
-class Analizer(): 
+class AnalizerDeou(): 
 
     def __init__(self,numero):
         config = configparser.ConfigParser()
@@ -166,14 +163,5 @@ class Analizer():
         self.analize()
         self.getData()
 
-
-# Seccion principal a ejecutar.
-num_days = 1
-if (len(sys.argv) > 1):
-    print ("Cuantos dias analizar: " + sys.argv[1])
-    num_days = int(sys.argv[1])
-
-p = Analizer(num_days)
-p.run()
-
-
+    def prueba(self):
+        print ("Analizando desde Ourense")
