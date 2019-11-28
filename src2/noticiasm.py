@@ -17,7 +17,7 @@ class Noticia():
         self.bulletin_year = 0
         self.bulletin_no = 0
         self.bulletin_date = datetime.now()
-        self.organization = "N/D"
+        self.organization = ""
         self.newname = ""
         self.url = ""
         self.fav = 0
@@ -47,6 +47,7 @@ class Noticia():
         self.__tablename = "noticias"
 
     def imprimir(self):
+        self.upper()
         print ("Sección: "   + self.seccion)
         print ("Organismo: " + self.organismo)
         print ("Órgano: "    + self.organo)
@@ -55,6 +56,7 @@ class Noticia():
         print ("----------------------------------------------------------------------------")
 
     def save(self):
+        self.upper()
         cursor = self.__db.cursor()
         sql = "INSERT INTO " + self.__tablename
         sql += "(bulletin, bulletin_year, bulletin_no, bulletin_date, seccion, organismo, organo, servicio, organization, newname,"
@@ -78,4 +80,14 @@ class Noticia():
         if (cursor.rowcount == 0):
             return False        
         return True
+    
+    def upper(self): 
+        self.bulletin     = self.bulletin.upper()    
+        self.organization = self.organization.upper()
+        self.seccion      = self.seccion.upper()
+        self.organismo    = self.organismo.upper()
+        self.organo       = self.organo.upper()
+        self.servicio     = self.servicio.upper()
+        self.newname      = self.newname.upper()
+
     

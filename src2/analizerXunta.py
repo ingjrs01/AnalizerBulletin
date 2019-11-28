@@ -174,6 +174,25 @@ class AnalizerXunta(Analizer):
             noticia.organo = 'CONSELLERÍA DO MAR'
             noticia.servicio = 'PORTOS DE GALICIA'
 
+        if 'Axencia Galega de Innovación' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE ECONOMÍA, EMPREGO E INDUSTRIA'
+            noticia.servicio = 'AXENCIA GALEGA DE INNOVACIÓN'
+
+        if 'Instituto Galego de Promoción Económica' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE ECONOMÍA, EMPREGO E INDUSTRIA'
+            noticia.servicio = 'INSTITUTO GALEGO DE PROMOCIÓN ECONÓMICA'
+
+        if 'Instituto Galego da Vivenda e Solo' in noticia.organismo:
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE INFRAESTRUCTURAS E VIVENDA'
+            noticia.servicio = 'INSTITUTO GALEGO DA VIVENDA E SOLO'
+
+
         return True
         
     def getData(self):

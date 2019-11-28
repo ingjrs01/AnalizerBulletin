@@ -32,7 +32,6 @@ class AnalizerDepo(Analizer):
             dia = int(info[len(info)-8])
             fecha = date(year, mes, dia)
 
-            numero = 500
             if (self.checkNumber(year,numero,"BOPO")):
                 return True
 
@@ -47,7 +46,7 @@ class AnalizerDepo(Analizer):
                 lis = tag.findAll("li")
                 for li in lis:
                     noticia = Noticia()
-                    noticia.bulletin = "BOPO"
+                    noticia.bulletin = "BOPPO"
                     noticia.bulletin_year = year
                     noticia.bulletin_no = numero
                     noticia.bulletin_date = fecha
@@ -69,7 +68,7 @@ class AnalizerDepo(Analizer):
                     noticia.url = "https://boppo.depo.gal" + li.a['href']
                     self.normalizar(noticia)
                     noticia.imprimir()
-                    #noticia.save()
+                    noticia.save()
 
     def normalizar(self,noticia):
         if (noticia.seccion == "XUNTA DE GALICIA"):
@@ -81,10 +80,13 @@ class AnalizerDepo(Analizer):
             noticia.organismo = "DEPUTACIÓN DE PONTEVEDRA"
             noticia.organo = ""
             noticia.servicio = ""
-        if (noticia.organismo == "MUNICIPAL"):
+
+        if  "Municipal" in noticia.organismo:
+            print ("Encontrado municipio")
             noticia.organismo = noticia.organo
             noticia.organo = ""  
             noticia.servicio = ""
+
         if (noticia.seccion == "SECCIÓN NON OFICIAL"):
             noticia.organismo = noticia.organo
             noticia.organo = ""

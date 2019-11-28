@@ -26,7 +26,7 @@ class NoticiasController extends Controller
         $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag);
 
         $years    = [2019,2018];
-        $boletines=['BOPO', 'DOGA','BOPCO'];
+        $boletines=['BOPPO', 'DOGA','BOPCO','BOPLU','BOPOU'];
         // Para arreglar paginación
         $noticias->appends(array(
             'bulletin'      => $bulletin,
