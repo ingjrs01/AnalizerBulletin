@@ -175,4 +175,28 @@ class NoticiasController extends Controller
         }
         return json_encode($ids);
     }
+
+    public function delete(Request $request)
+    {
+        $ids = $request['ids'];
+        $bulletin    = $request->get('bulletin');
+        $year        = $request->get('bulletin_year');
+        $bulletin_no = $request->get('bulletin_no');
+        $destacado   = $request->get('destacado');
+        $search_tag  = $request->get('tag');
+
+        foreach ($ids as $id)
+        {
+            $noticia = Noticia::findOrFail($id);
+            // Hay que borrar los relacionados
+            //$tag->noticias()->detach($ids);
+            $noticia->tags()->detach();
+            $noticia->delete();            
+        }
+        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag); 
+        $resultados = array('datos'=>$noticias,'paginas'=>$noticias->links()->render());
+    //    return dd($noticias->links()->render()); 
+        return json_encode($resultados);
+
+    }
 }

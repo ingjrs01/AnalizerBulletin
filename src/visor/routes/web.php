@@ -28,3 +28,5 @@ Route::post('/noticias/settags','NoticiasController@settags')->name('noticias.se
 Route::post('/noticias/gettags','NoticiasController@gettags')->name('noticias.gettags');
 
 Route::post('/noticias/markread','NoticiasController@markread')->name('noticias.markread');
+
+Route::post('/noticias/delete','NoticiasController@delete')->name('noticias.delete');

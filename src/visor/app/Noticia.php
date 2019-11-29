@@ -38,7 +38,7 @@ class Noticia extends Model
             $conditions[] = ['tag_id','=',$tag];
         }
 
-        return $query->where($conditions)->orderBy('bulletin_date', 'DESC')->paginate(25);
+        return $query->where($conditions)->orderBy('bulletin_date', 'DESC')->paginate(10);
     }    
 
     // relaciones
