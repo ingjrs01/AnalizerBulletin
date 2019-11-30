@@ -146,6 +146,13 @@ function deleteItems(e)
     if (values.length == 0)
         return true;
 
+    var page = window.location.hash.replace('#', '');
+    if (page == Number.NaN || page <= 0) 
+    {
+        console.log("Página " + page );
+        
+    }
+    return true;
     $.confirm({
     title: 'Borrando elementos',
     content: 'Estas seguro ?',
@@ -417,9 +424,6 @@ function deleteItems(e)
                 <a href=" {{ route('noticias.edit',$item->id) }} " class="btn btn-success btncolorblanco">
                     <i class="far fa-eye"></i>  
                 </a>
-              <!--  <a href="#" class="btn btn-danger btncolorblanco">
-                    <i class="fa fa-trash-alt"></i>  
-                </a>-->
             </td>
         </tr>
         @endforeach

@@ -53,7 +53,8 @@ class AnalizerDelu(Analizer):
                 if (lista is not None):
                     organismos = lista.findChildren("li",recursive=False)
                     for organismo in organismos: 
-                        if (organismo.strong is None):
+                        noticias = organismo.find("ul")
+                        if ((organismo.strong is None) or (noticias is None)):
                             noticia = Noticia()
                             noticia.bulletin = "BOPLU"
                             noticia.bulletin_year = anio
@@ -66,12 +67,16 @@ class AnalizerDelu(Analizer):
                             noticia.organo    = ""
                             noticia.servicio  = ""        
                             noticia.organization = ""
-                            noticia.newname = organismo.a.getText()
+                            if (organismo.a is not None):
+                                noticia.newname = organismo.a.getText()
+                                noticia.url = "http://deputacionlugo.gal" + organismo.a['href']
+                            else:
+                                print ("Ha habido una incidencia")
+                                noticia.newname = "INCIDENCIA: "
 
                             if (self.isNotificable(noticia.newname)):
                                 noticia.notify = 1
-
-                            noticia.url = "http://deputacionlugo.gal" + organismo.a['href']
+                            
                             self.normalizar(noticia)
                             noticia.imprimir()
                             noticia.save()
