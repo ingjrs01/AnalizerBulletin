@@ -1,5 +1,6 @@
 @extends('plantilla.plantilla')
 
+@section('scripts')
 <script>
 function do_click (e,id)
 {
@@ -146,13 +147,14 @@ function deleteItems(e)
     if (values.length == 0)
         return true;
 
+        /*
     var page = window.location.hash.replace('#', '');
     if (page == Number.NaN || page <= 0) 
     {
         console.log("Página " + page );
         
     }
-    return true;
+    */
     $.confirm({
     title: 'Borrando elementos',
     content: 'Estas seguro ?',
@@ -168,7 +170,8 @@ function deleteItems(e)
                 'bulletin_year' : $('#id_bulletin_year option:selected').text(),
                 'bulletin_no': $('#id_bulletin_no').val(), 
                 'destacado': $('#idDestacado option:selected').text(),
-                'tag': $('#idTag').val() 
+                'tag': $('#idTag').val(),
+                'date': $('#id_date').val() 
             },
             url: " {{ route('noticias.delete') }}",
             type:'POST',
@@ -218,21 +221,11 @@ function deleteItems(e)
         }
     }
     });
-
-/*
-    var opcion = confirm("Esto borrará los elementos. ¿Estas seguro?");
-    if (opcion == true) 
-    {
-        console.log("Has clickado OK");
-    } 
-    else 
-    {
-	    console.log("Has clickado Cancelar");
-	}*/
-	//document.getElementById("ejemplo").innerHTML = mensaje    
+   
 }
 
 </script>
+@endsection
 
 @section('contenido')
 
@@ -315,7 +308,10 @@ function deleteItems(e)
       </li>
 
     </ul>
-    <form class="form-inline my-2 my-lg-0">
+    <form  class="form-inline my-2 my-lg-0" method="post">
+    {{ csrf_field() }}
+    <input class="form-control" type="date" name="date" value="{{$sdate}}" id="id_date" >
+
     <select name="tag" class="form-control mr-sm-2" id="idTag" onchange="this.form.submit()">
         <option>Etiquetas</option>
         @foreach($tags as $tag)

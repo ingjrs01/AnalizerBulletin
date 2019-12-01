@@ -17,7 +17,9 @@ Route::get('/', function () {
 
 Route::resource('noticias','NoticiasController');
 
+
 Route::get('/', 'NoticiasController@index')->name('home');
+Route::post('/', 'NoticiasController@index')->name('home');
 
 Route::get('/noticias/{id}/confirm','NoticiasController@confirm')->name('noticias.confirm');
 

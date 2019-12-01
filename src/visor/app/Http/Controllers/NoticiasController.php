@@ -20,10 +20,11 @@ class NoticiasController extends Controller
         $bulletin_no = $request->get('bulletin_no');
         $destacado   = $request->get('destacado');
         $search_tag  = $request->get('tag');
+        $sdate = $request->get('date');
         //return dd($destacado);
 
         $tags     = Tag::all();
-        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag);
+        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate);
 
         $years    = [2019,2018];
         $boletines=['BOPPO', 'DOGA','BOPCO','BOPLU','BOPOU'];
@@ -36,7 +37,7 @@ class NoticiasController extends Controller
             'tag'           => $search_tag
         ));
         //return dd($noticias->getEncodedNameAttribute('tag'));
-        return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags','search_tag'));
+        return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags','search_tag','sdate'));
     }
 
     /**
@@ -184,6 +185,7 @@ class NoticiasController extends Controller
         $bulletin_no = $request->get('bulletin_no');
         $destacado   = $request->get('destacado');
         $search_tag  = $request->get('tag');
+        $sdate = $request->get('date');
 
         foreach ($ids as $id)
         {
@@ -193,7 +195,7 @@ class NoticiasController extends Controller
             $noticia->tags()->detach();
             $noticia->delete();            
         }
-        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag); 
+        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate); 
         $resultados = array('datos'=>$noticias,'paginas'=>$noticias->links()->render());
     //    return dd($noticias->links()->render()); 
         return json_encode($resultados);
