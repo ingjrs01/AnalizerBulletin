@@ -17,9 +17,7 @@ Route::get('/', function () {
 
 Route::resource('noticias','NoticiasController');
 
-
 Route::get('/', 'NoticiasController@index')->name('home');
-Route::post('/', 'NoticiasController@index')->name('home');
 
 Route::get('/noticias/{id}/confirm','NoticiasController@confirm')->name('noticias.confirm');
 
@@ -32,3 +30,5 @@ Route::post('/noticias/gettags','NoticiasController@gettags')->name('noticias.ge
 Route::post('/noticias/markread','NoticiasController@markread')->name('noticias.markread');
 
 Route::post('/noticias/delete','NoticiasController@delete')->name('noticias.delete');
+
+Route::post('/noticias/datos','NoticiasController@datos')->name('noticias.datos');

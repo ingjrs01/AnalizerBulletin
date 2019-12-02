@@ -140,6 +140,86 @@ function clicktag(id)
 
 }
 
+function getPageFromUrl(url) {
+  if(!url) url = location.search;
+  var query = url.substr(1);
+  var result = {};
+  parametros = query.split("?")[1];  
+  if (parametros == null) return '1';
+  parametros.split("&").forEach(function(part) {
+    var item = part.split("=");
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+
+  if (result['page'] == null)
+    return '1';
+
+  return result['page']  
+}
+
+function loadData(url_post)
+{
+    console.log("Hola, soy loadData" + url_post);
+    pagina = getPageFromUrl(url_post);    
+    console.log(pagina);
+    $.ajax({
+        data: {
+            '_token': "{{ csrf_token() }}",
+            'bulletin' : $('#id_bulletin option:selected').text(), 
+            'bulletin_year' : $('#id_bulletin_year option:selected').text(),
+            'bulletin_no': $('#id_bulletin_no').val(), 
+            'destacado': $('#idDestacado option:selected').text(),
+            'tag': $('#idTag').val(),
+            'date': $('#id_date').val()
+        },
+        url: "{{ route('noticias.datos')}}" + "?page=" + pagina,
+        type:'POST',
+        dataType: 'json',
+        success: function(response) 
+        {
+            $('.control-check-j').prop('checked', false);
+            $('.check-menu').prop('checked', false);
+            tabla = $('#table-data > tbody');
+            tabla.remove();
+            data = response.datos.data;
+            data.forEach( function(valor, indice, array)
+            {
+                classname = "table-default";
+                if (valor.readed == 0)
+                    classname = "table-primary";
+                star = 'far fa-star';                    
+                if (valor.fav == 1)
+                    star = 'fas fa-star';
+
+                fila = '<tr class="'+classname+'" id="table-row-id-'+valor.id+'">';
+                fila +='<th scope="row">';
+                fila += '<div class="custom-control custom-checkbox">';
+                fila += '<input type="checkbox" class="custom-control-input control-check-j" id="tableDefaultCheck' + valor.id
+                fila += '" value="'+valor.id+'" onclick="selectSingle()">';
+                fila += '<label class="custom-control-label" for="tableDefaultCheck'+valor.id+'">'+valor.id+'</label></div></th>';
+                fila += '<td class="text-left "><a href="#" target="_blank">'+valor.newname+'</a></td>';
+                fila += '<td>'+valor.bulletin+'</td><td>'+valor.bulletin_no+'</td><td>'+valor.bulletin_year+'</td>';
+                fila += '<td>'+valor.seccion+'</td><td>'+valor.organismo+'</td><td>'+valor.organo+'</td>';
+                fila += '<td>'+valor.bulletin_date+'</td>';
+                fila += '<td  class="align-right"> ';
+                fila += '<a href="#" onclick="do_click(event,'+valor.id+')" class="btn btn-info btncolorblanco" >';
+                fila += '<i class="'+star+'" id="cfav-'+valor.id+'"></i></a>';
+                fila +='<a href="#" class="btn btn-success btncolorblanco"><i class="far fa-eye"></i></a></td></tr>';
+
+                $('#table-data').append(fila); 
+                $('#id_paginas').html(response.paginas);
+
+                $("a.page-link").click(function(event) {
+                    event.preventDefault();
+                    var addressValue = $(this).attr("href");
+                    loadData(addressValue);
+                });
+            });
+        }
+    });    
+}
+
+
 function deleteItems(e)
 {
     e.preventDefault();
@@ -147,21 +227,11 @@ function deleteItems(e)
     if (values.length == 0)
         return true;
 
-        /*
-    var page = window.location.hash.replace('#', '');
-    if (page == Number.NaN || page <= 0) 
-    {
-        console.log("Página " + page );
-        
-    }
-    */
     $.confirm({
     title: 'Borrando elementos',
     content: 'Estas seguro ?',
     buttons: {
         aceptar: function () {
-            //$.alert('Aceptar');
-
             $.ajax({
             data: {
                 "_token": "{{ csrf_token() }}",
@@ -178,6 +248,9 @@ function deleteItems(e)
             dataType: 'json',
             success: function(response) 
             {
+                url_post = window.location.href;
+                loadData(url_post);
+                /*
                 $('.control-check-j').prop('checked', false);
                 $('.check-menu').prop('checked', false);
                 tabla = $('#table-data > tbody');
@@ -209,20 +282,29 @@ function deleteItems(e)
 
                     $('#table-data').append(fila); 
                     $('#id_paginas').html(response.paginas);
+                    
                 });
+                */
 
             }
             });
-
         },
         cancelar: function () {
-            //$.alert('Cancelar');
             console.log("dalle que no");
         }
     }
     });
    
 }
+
+
+$( document ).ready(function() {
+    $("a.page-link").click(function(event) {
+        event.preventDefault();
+        var addressValue = $(this).attr("href");
+        loadData(addressValue);
+    });
+});
 
 </script>
 @endsection
@@ -308,8 +390,7 @@ function deleteItems(e)
       </li>
 
     </ul>
-    <form  class="form-inline my-2 my-lg-0" method="post">
-    {{ csrf_field() }}
+    <form  class="form-inline my-2 my-lg-0" method="get">    
     <input class="form-control" type="date" name="date" value="{{$sdate}}" id="id_date" >
 
     <select name="tag" class="form-control mr-sm-2" id="idTag" onchange="this.form.submit()">
