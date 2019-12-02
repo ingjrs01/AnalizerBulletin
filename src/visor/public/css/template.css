@@ -196,3 +196,8 @@ div.custom-checkbox{
 input[type=checkbox].check-menu {
     padding-right: 2px;
 }
+
+.controlb {
+    width: 150px;
+    max-width: 130px;
+}

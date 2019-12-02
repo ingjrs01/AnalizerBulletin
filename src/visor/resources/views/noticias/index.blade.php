@@ -157,11 +157,22 @@ function getPageFromUrl(url) {
   return result['page']  
 }
 
-function loadData(url_post)
+function getPage()
+{    
+    item = $('li.page-item.active').find('span').text();
+    return (item);
+    //console.log("An the page is: "); 
+    //console.debug(item);
+}
+
+function loadData(url)
 {
-    console.log("Hola, soy loadData" + url_post);
-    pagina = getPageFromUrl(url_post);    
-    console.log(pagina);
+    if (url == "")        
+        pagina = getPage();    
+    else
+        pagina = getPageFromUrl(url)
+
+    
     $.ajax({
         data: {
             '_token': "{{ csrf_token() }}",
@@ -248,44 +259,7 @@ function deleteItems(e)
             dataType: 'json',
             success: function(response) 
             {
-                url_post = window.location.href;
-                loadData(url_post);
-                /*
-                $('.control-check-j').prop('checked', false);
-                $('.check-menu').prop('checked', false);
-                tabla = $('#table-data > tbody');
-                tabla.remove();
-                data = response.datos.data;
-                data.forEach( function(valor, indice, array)
-                {
-                    classname = "table-default";
-                    if (valor.readed == 0)
-                        classname = "table-primary";
-                    star = 'far fa-star';                    
-                    if (valor.fav == 1)
-                        star = 'fas fa-star';
-
-                    fila = '<tr class="'+classname+'" id="table-row-id-'+valor.id+'">';
-                    fila +='<th scope="row">';
-                    fila += '<div class="custom-control custom-checkbox">';
-                    fila += '<input type="checkbox" class="custom-control-input control-check-j" id="tableDefaultCheck' + valor.id
-                    fila += '" value="'+valor.id+'" onclick="selectSingle()">';
-                    fila += '<label class="custom-control-label" for="tableDefaultCheck'+valor.id+'">'+valor.id+'</label></div></th>';
-                    fila += '<td class="text-left "><a href="#" target="_blank">'+valor.newname+'</a></td>';
-                    fila += '<td>'+valor.bulletin+'</td><td>'+valor.bulletin_no+'</td><td>'+valor.bulletin_year+'</td>';
-                    fila += '<td>'+valor.seccion+'</td><td>'+valor.organismo+'</td><td>'+valor.organo+'</td>';
-                    fila += '<td>'+valor.bulletin_date+'</td>';
-                    fila += '<td  class="align-right"> ';
-                    fila += '<a href="#" onclick="do_click(event,'+valor.id+')" class="btn btn-info btncolorblanco" >';
-                    fila += '<i class="'+star+'" id="cfav-'+valor.id+'"></i></a>';
-                    fila +='<a href="#" class="btn btn-success btncolorblanco"><i class="far fa-eye"></i></a></td></tr>';
-
-                    $('#table-data').append(fila); 
-                    $('#id_paginas').html(response.paginas);
-                    
-                });
-                */
-
+                loadData("");
             }
             });
         },
@@ -314,7 +288,9 @@ $( document ).ready(function() {
 <div class="container-fluid registerinicio">
     <div class="row">
         <div class="col-md-6 register-left regiter-left1">
-            <img src="{{asset('img/calendario.png')}}" alt=""/>
+            <a href="{{ route('noticias.index') }}">
+                <img src="{{asset('img/calendario.png')}}" alt=""/>
+            </a>
         </div>    
         <div class="col-md-6 register-left">
             
@@ -391,9 +367,9 @@ $( document ).ready(function() {
 
     </ul>
     <form  class="form-inline my-2 my-lg-0" method="get">    
-    <input class="form-control" type="date" name="date" value="{{$sdate}}" id="id_date" >
+    <input class="form-control controlb" type="date" name="date" value="{{$sdate}}" id="id_date" >
 
-    <select name="tag" class="form-control mr-sm-2" id="idTag" onchange="this.form.submit()">
+    <select name="tag" class="form-control mr-sm-2 controlb" id="idTag" onchange="loadData('')">
         <option>Etiquetas</option>
         @foreach($tags as $tag)
             <option 
@@ -404,7 +380,7 @@ $( document ).ready(function() {
         @endforeach
     </select>
 
-    <select name="destacado" class="form-control mr-sm-2" id="idDestacado" onchange="this.form.submit()">
+    <select name="destacado" class="form-control mr-sm-2 controlb" id="idDestacado" onchange="loadData('')">
         <option>Todos</option>
         @foreach($destacadol as $des)
             <option 
@@ -415,8 +391,8 @@ $( document ).ready(function() {
         @endforeach
     </select>
 
-    <select name="bulletin" class="form-control mr-sm-2" id="id_bulletin" onchange="this.form.submit()">
-      <option>Buscar por boletin</option>
+    <select name="bulletin" class="form-control mr-sm-2 controlb" id="id_bulletin" onchange="loadData('')">
+      <option>Boletín</option>
       @foreach($boletines as $boletin)
       <option 
         @if ($boletin == $bulletin) 
@@ -426,8 +402,8 @@ $( document ).ready(function() {
       @endforeach
     </select>
 
-    <select name="bulletin_year" class="form-control mr-sm-2" id="id_bulletin_year" onchange="this.form.submit()">
-        <option>Buscar por año</option>
+    <select name="bulletin_year" class="form-control mr-sm-2 controlb" id="id_bulletin_year" onchange="loadData('')">
+        <option>Año</option>
         @foreach ($years as $y)
             <option 
              @if ($year == $y)
@@ -437,10 +413,8 @@ $( document ).ready(function() {
         @endforeach
     </select>
 
-    <input name="bulletin_no" id="id_bulletin_no" class="form-control mr-sm-2" type="search" placeholder="Buscar por número" aria-label="Search" value="{{$bulletin_no}}">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Buscar</button>
-
-
+    <input name="bulletin_no" id="id_bulletin_no" class="form-control mr-sm-1 controlb" type="search" placeholder="Número" aria-label="Search" value="{{$bulletin_no}}">
+    <button class="btn btn-outline-success my-2 my-sm-0" >Buscar</button>
 
     </form>
   </div>

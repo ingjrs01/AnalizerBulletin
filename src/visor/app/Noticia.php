@@ -12,11 +12,11 @@ class Noticia extends Model
         $conditions = [];
         $query->select('noticias.id','bulletin','bulletin_year','bulletin_no','seccion','organismo','organo','bulletin_date','organization','newname','url','fav','notify','readed','noticias.created_at','noticias.updated_at');
 
-        if ($bulletin && $bulletin <> "Buscar por boletin")
+        if ($bulletin && $bulletin <> "Boletín")
         {
             $conditions[] = ['bulletin', 'LIKE', "%$bulletin%"];
         }
-        if ($bulletin_year && $bulletin_year <> "Buscar por año")
+        if ($bulletin_year && $bulletin_year <> "Año")
         {
             $conditions[] = ['bulletin_year', '=', $bulletin_year];
         }
@@ -37,7 +37,7 @@ class Noticia extends Model
         {
             $conditions[] = ['bulletin_date', '=', "$sdate"];
         }
-        
+
         if ($tag && $tag <> 'Etiquetas')
         {
             $query->join('noticia_tag', 'noticias.id', '=', 'noticia_id');
