@@ -36,10 +36,11 @@ class Analizer():
         self.__analizers.append(a)
 
     # Busca si la noticia contiene una serie de palabras
-    def isNotificable(selft, new):
+    def isNotificable(self, new):
+        n = new.upper()
         words = ['OPOSICIÓN', 'SELECTIVOS', 'FUNCIONARIO','EMPREGO']
         for word in words:
-            if (word in new):
+            if (word in n):
                 return True
 
         return False

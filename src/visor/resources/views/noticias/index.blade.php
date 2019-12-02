@@ -208,7 +208,7 @@ function loadData(url)
                 fila += '<input type="checkbox" class="custom-control-input control-check-j" id="tableDefaultCheck' + valor.id
                 fila += '" value="'+valor.id+'" onclick="selectSingle()">';
                 fila += '<label class="custom-control-label" for="tableDefaultCheck'+valor.id+'">'+valor.id+'</label></div></th>';
-                fila += '<td class="text-left "><a href="#" target="_blank">'+valor.newname+'</a></td>';
+                fila += '<td class="text-left "><a href="'+valor.url+'" target="_blank">'+valor.newname+'</a></td>';
                 fila += '<td>'+valor.bulletin+'</td><td>'+valor.bulletin_no+'</td><td>'+valor.bulletin_year+'</td>';
                 fila += '<td>'+valor.seccion+'</td><td>'+valor.organismo+'</td><td>'+valor.organo+'</td>';
                 fila += '<td>'+valor.bulletin_date+'</td>';

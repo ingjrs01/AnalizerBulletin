@@ -12,6 +12,7 @@ import pymysql
 import telebot
 import re
 import configparser
+import time
 
 class AnalizerXunta(Analizer): 
 
@@ -263,6 +264,9 @@ class AnalizerXunta(Analizer):
         l2 = self.urlGeneratorXunta()
         for item in l2:
             self.analize(item)
+            print ("Esperando")
+            time.sleep(5)
+            print("Reanudando")
 
         self.getData()
 

@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 from noticiasm import Noticia
 from analizer import Analizer
+import time
 
 class AnalizerDelu(Analizer): 
 
@@ -161,5 +162,8 @@ class AnalizerDelu(Analizer):
         l2 = self.urlGenerator()
         for item in l2:
             self.analize(item)
+            print ("Esperando")
+            time.sleep(5)
+            print("Reanudando")
 
         self.getData()        

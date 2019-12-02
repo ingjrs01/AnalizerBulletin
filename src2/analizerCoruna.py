@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from datetime import date, datetime, timedelta
 from noticiasm import Noticia
 from analizer import Analizer
+import time
 
 class AnalizerCoruna(Analizer): 
 
@@ -32,7 +33,6 @@ class AnalizerCoruna(Analizer):
             mes = self.meses.index(cachos[9]) + 1
             ano = int(cachos[11])
             fecha = date(ano,mes,dia)
-            print (fecha)
 
             if (self.checkNumber(ano,numero,"BOPCO")):
                 return True # Ya existen. 
@@ -94,4 +94,8 @@ class AnalizerCoruna(Analizer):
         lista = self.urlGenerator()
         for item in lista:
             self.analize(item)
+            print ("Esperando")
+            time.sleep(5)
+            print("Reanudando")
+
         self.getData()
