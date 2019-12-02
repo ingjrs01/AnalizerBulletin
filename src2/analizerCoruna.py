@@ -52,7 +52,12 @@ class AnalizerCoruna(Analizer):
                     if (servi is not None):
                         noticia.servicio = anuncio.find("h4").getText()
                 else:
-                    noticia.organismo = anuncio.find("h3").getText()
+                    tmp = anuncio.find("h3")
+                    if (tmp is not None): 
+                        noticia.organismo = anuncio.find("h3").getText()
+                    else:
+                        noticia.organismo = "OTROS"
+
                     if (anuncio.find("h4")):
                         noticia.organo = anuncio.find("h4").getText()
 
@@ -69,7 +74,7 @@ class AnalizerCoruna(Analizer):
                 noticia.readed = 0
                 noticia.created_at = datetime.now()
                 noticia.updated_at = datetime.now()
-                #noticia.imprimir()
+                noticia.imprimir()
                 noticia.save()
 
 

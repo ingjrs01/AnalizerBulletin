@@ -36,7 +36,6 @@ class NoticiasController extends Controller
             'tag'           => $search_tag
         ));
 
-        //return dd($noticias->getEncodedNameAttribute('tag'));
         return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags','search_tag','sdate'));
     }
 
@@ -117,7 +116,6 @@ class NoticiasController extends Controller
         $noticia->save();
 
         return json_encode($noticia->fav);
-        //return "que pacha pepe";
     }
 
     public function settags(Request $request)
@@ -140,22 +138,15 @@ class NoticiasController extends Controller
         if ($operation == "demark")
         {
             $tag = Tag::findOrFail($tagid);
-
             $tag->noticias()->detach($ids);
-
         }
-
         return json_encode(True);
     }
 
     public function gettags(Request $request)
     {
         $ids = $request['ids'];
-
         $res = Noticia::getTagsByNewId($ids);
-        //return dd($res);
-        //$lala = json_encode(array_values($res));
-        //return dd($lala);
         return json_encode(array_values($res));
 
     }
@@ -204,26 +195,9 @@ class NoticiasController extends Controller
         $destacado   = $request->get('destacado');
         $search_tag  = $request->get('tag');
         $sdate = $request->get('date');
-        //lala
-        //$tags     = Tag::all();
         $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate);
 
-        //$years    = [2019,2018];
-        //$boletines=['BOPPO', 'DOGA','BOPCO','BOPLU','BOPOU'];
-        // Para arreglar paginación
-        /*
-        $noticias->appends(array(
-            'bulletin'      => $bulletin,
-            'bulletin_year' => $year,
-            'bulletin_no'   => $bulletin_no,
-            'destacado'     => $destacado,
-            'tag'           => $search_tag
-        ));
-        */
-        //lala
-
         $resultados = array('datos'=>$noticias,'paginas'=>$noticias->links()->render());
-    //    return dd($noticias->links()->render()); 
         return json_encode($resultados);
 
     }
