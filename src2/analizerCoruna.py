@@ -36,6 +36,9 @@ class AnalizerCoruna(Analizer):
 
             if (self.checkNumber(ano,numero,"BOPCO")):
                 return True # Ya existen. 
+                
+            self.beginAnalysis(fecha)
+            self.setAnalysisState("BOPCO",fecha,"INICIADO")
 
             anuncios = res.findAll("div",{"class":"bloqueAnuncio"})
             for anuncio in anuncios: 
@@ -76,6 +79,7 @@ class AnalizerCoruna(Analizer):
                 noticia.updated_at = datetime.now()
                 noticia.imprimir()
                 noticia.save()
+            self.setAnalysisState("BOPCO",fecha,"FINALIZADO")
 
 
     def urlGenerator(self): 

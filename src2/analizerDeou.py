@@ -27,8 +27,8 @@ class AnalizerDeou(Analizer):
     def analize(self):
         url = 'https://bop.depourense.es/portal/cambioBoletin.do'
         fechas = self.urlGenerator()
-        for f in fechas:
-            print (url + "   ." + f + ".")
+        #for f in fechas:
+        #    print (url + "   ." + f + ".")
 
         for fecha in fechas: 
             post_params = {'fechaInput':fecha}
@@ -41,6 +41,8 @@ class AnalizerDeou(Analizer):
             mes =  self.meses.index(sumario[9]) + 1 # El array comienza en 0
             dia = int(sumario[7])
             fecha = date(year, mes, dia)
+            self.beginAnalysis(fecha)
+            self.setAnalysisState("BOPOU",fecha,"INICIADO")
             v_url = "https://bop.depourense.es/portal/" + res.find("a",{"class":"enlacePdfS"})['href']
 
             if  (self.checkNumber(year,numero,"BOPOU") == False):
@@ -67,9 +69,12 @@ class AnalizerDeou(Analizer):
                     noticia.save()
             else:
                 print ("Paso al siguiente")
+
+            self.setAnalysisState("BOPOU",fecha,"FINALIZADO")
             print ("Esperando")
             time.sleep(5)
             print("Reanudando")
+
 
     def normalizar(self,noticia):
         if (noticia.seccion == "IV. ENTIDADES LOCAIS"):

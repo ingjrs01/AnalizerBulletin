@@ -15,9 +15,6 @@ class AnalizerDelu(Analizer):
         #self.__meses = ['xaneiro','febreiro','marzo','abril','maio','xuño','xullo','agosto','setembro','outubro','novembro','decembro'] 
 
     def analize(self,url):                
-        #url = 'http://deputacionlugo.gal/boletin-oficial-da-provincia-de-lugo/ultimo-bop'
-        #url = 'http://deputacionlugo.gal/gl/node/72645'
-        #url = 'http://deputacionlugo.gal/gl/node/72663'
         try: 
             html = urlopen(url)
         except HTTPError as e:
@@ -38,8 +35,11 @@ class AnalizerDelu(Analizer):
             mes = self.meses.index(sfecha[3].lower()) + 1 
             anio = int(sfecha[5])
             fecha = date(anio,mes,dia)
+
             if (self.checkNumber(anio,numero,"BOPLU")):
                 return True
+            self.beginAnalysis(fecha)
+            self.setAnalysisState("BOPLU",fecha,"INICIADO")
 
             div = res.find("div",{"class":"field--name-field-ail-bop-contenido"})
             lista = div.find("ul")
@@ -105,9 +105,9 @@ class AnalizerDelu(Analizer):
                                 self.normalizar(noticia)
                                 noticia.imprimir()
                                 noticia.save()
-
                 else: 
                     print ("Lista vacía")
+            self.setAnalysisState("BOPLU",fecha,"FINALIZADO")
 
     def normalizar(self,noticia):
         if (noticia.seccion == "XUNTA DE GALICIA"):

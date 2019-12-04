@@ -229,3 +229,12 @@ python3 analizerXunta.py 1
 python3 analizerXunta.py 1
 python3 analizerXunta.py 1
 python3 analizerXunta.py 1
+cd /root/
+ls
+exit
+cd /root/
+ls
+python3 main.py  1
+ls
+EXIT
+exit

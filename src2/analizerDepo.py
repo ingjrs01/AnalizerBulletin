@@ -33,8 +33,11 @@ class AnalizerDepo(Analizer):
             dia = int(info[len(info)-8])
             fecha = date(year, mes, dia)
 
-            if (self.checkNumber(year,numero,"BOPO")):
+            if (self.checkNumber(year,numero,"BOPPO")):
                 return True
+
+            self.beginAnalysis(fecha)
+            self.setAnalysisState("BOPPO",fecha,"INICIADO")
 
             grupo = res.findAll("ul",{"class":"listadoSumario"})
 
@@ -70,6 +73,8 @@ class AnalizerDepo(Analizer):
                     self.normalizar(noticia)
                     noticia.imprimir()
                     noticia.save()
+            # LLegados aquí, ha finalizado el análisis
+            self.setAnalysisState("BOPPO",fecha,"FINALIZADO")
 
     def normalizar(self,noticia):
         if (noticia.seccion == "XUNTA DE GALICIA"):

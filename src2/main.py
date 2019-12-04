@@ -28,4 +28,4 @@ p.addAnalizer(a4)
 p.addAnalizer(a5)
 
 p.work()
-
+print ("End.")
