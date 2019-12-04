@@ -414,8 +414,7 @@ $( document ).ready(function() {
     </select>
 
     <input name="bulletin_no" id="id_bulletin_no" class="form-control mr-sm-1 controlb" type="search" placeholder="Número" aria-label="Search" value="{{$bulletin_no}}">
-    <button class="btn btn-outline-success my-2 my-sm-0" >Buscar</button>
-
+    <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="loadData('')">Buscar</button>    
     </form>
   </div>
 </nav>
