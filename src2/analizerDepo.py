@@ -120,3 +120,5 @@ class AnalizerDepo(Analizer):
 
         self.getData()
     
+    def imprimir(self):
+        print ("Soy AnalizerDepo")

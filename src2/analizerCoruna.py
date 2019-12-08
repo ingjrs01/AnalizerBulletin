@@ -103,3 +103,6 @@ class AnalizerCoruna(Analizer):
             print("Reanudando")
 
         self.getData()
+
+    def imprimir(self):
+        print ("Soy AnalizerCoruña")

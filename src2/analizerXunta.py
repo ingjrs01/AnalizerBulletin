@@ -215,3 +215,6 @@ class AnalizerXunta(Analizer):
                     if (li.a['href'].find("#") < 0):
                         urls_in.append("https://www.xunta.gal/diario-oficial-galicia/" + li.a['href'])
         return urls_in
+
+    def imprimir(self):
+        print ("Soy AnalizerXunta")

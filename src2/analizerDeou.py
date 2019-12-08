@@ -118,3 +118,7 @@ class AnalizerDeou(Analizer):
         #self.registerListener()
         self.analize()
         self.getData()
+
+    def imprimir(self):
+        print ("Soy AnalizerOrense")
+

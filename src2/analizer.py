@@ -122,8 +122,7 @@ class Analizer():
         fieldname = bulletin.lower()
 
         now = datetime.now()
-        sql = "UPDATE `analyses` SET " + fieldname + " = %s, `updated_at` = %s WHERE `analysis_date` = %s"
-        print (sql)
+        sql = "UPDATE `analyses` SET " + fieldname + " = %s, `updated_at` = %s WHERE `analysis_date` = %s"        
         recordTuple = (state, now, fecha)
         try:
            cursor.execute(sql,recordTuple)

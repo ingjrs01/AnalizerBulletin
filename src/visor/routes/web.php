@@ -32,3 +32,5 @@ Route::post('/noticias/markread','NoticiasController@markread')->name('noticias.
 Route::post('/noticias/delete','NoticiasController@delete')->name('noticias.delete');
 
 Route::post('/noticias/datos','NoticiasController@datos')->name('noticias.datos');
+
+Route::resource('analisis','AnalisisController');
