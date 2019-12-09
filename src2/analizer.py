@@ -72,6 +72,15 @@ class Analizer():
             return False        
         return True
 
+    def checkBulletinExists(self,bulletin,fecha):
+        cursor = self.db.cursor()
+        sql = "SELECT `id` FROM `analyses` WHERE `analysis_date` = %s AND " + bulletin.lower() + " = 'Finalizado' "        
+        cursor.execute(sql,(fecha))
+        rows = cursor.fetchall()
+        if (cursor.rowcount == 0):
+            return False        
+        return True
+
     def sendTelegram(self, msj):
         self.__tb.send_message(172454149, msj)
 

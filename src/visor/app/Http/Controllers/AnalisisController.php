@@ -76,7 +76,9 @@ class AnalisisController extends Controller
      */
     public function edit($id)
     {
-        //
+        $analisis = Analysis::findOrFail($id);
+
+        return view('analisis.edit',compact('analisis'));
     }
 
     /**
@@ -100,5 +102,6 @@ class AnalisisController extends Controller
     public function destroy($id)
     {
         //
+        return "Borrando";
     }
 }

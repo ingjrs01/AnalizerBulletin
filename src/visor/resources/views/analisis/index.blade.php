@@ -43,7 +43,7 @@
 
 <br>
 
-<table class="table-responsive table text-center" id="table-data">
+<table class=" table text-center" id="table-data">
     <thead>
     <tr>
         <th scope="col">
@@ -82,11 +82,11 @@
             <td>{{ $item->created_at }}</td>
             <td>{{ $item->updated_at }}</td>
             <td  class="align-right"> 
-                <a href="#" onclick="do_click(event,{{$item->id}})" class="btn btn-info btncolorblanco" >
+                <a href="{{ route('analisis.edit',$item->id) }}" class="btn btn-info btncolorblanco" >
                     <i class="far fa-edit" id="cfav-{{$item->id}}"></i>  
                 </a>
-                <a href=" {{ route('noticias.edit',$item->id) }} " class="btn btn-success btncolorblanco">
-                    <i class="far fa-eye"></i>  
+                <a href=" {{ route('analisis.destroy',$item->id) }} " class="btn btn-success btncolorblanco">
+                    <i class="far fa-trash-alt"></i>  
                 </a>
             </td>
         </tr>

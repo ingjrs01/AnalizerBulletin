@@ -36,10 +36,12 @@ class AnalizerXunta(Analizer):
             dia = int(temp[len(temp)-5])
             fecha = date(year,mes,dia)
 
-            if  (self.checkNumber(year, numero,"DOGA") == True):
+            if  (self.checkBulletinExists("DOGA",fecha) == True):
+                print ("Ya he encontrado datos")
                 return True
+                
             self.beginAnalysis(fecha)
-            self.setAnalysisState("DOGA",fecha,"INICIADO")
+            #self.setAnalysisState("DOGA",fecha,"INICIADO")
             sections = res.findAll("div",{"id":re.compile('secciones*')})
             for section in sections:
                 lines = section.findAll("li")
@@ -69,7 +71,7 @@ class AnalizerXunta(Analizer):
                         noticia.updated_at = datetime.now()
                         noticia.imprimir()
                         noticia.save()
-            self.setAnalysisState("DOGA",fecha,"FINALIZADO")
+            #self.setAnalysisState("DOGA",fecha,"FINALIZADO")
 
     def normalizar(self,noticia): 
         if "Xulgado" in noticia.organismo:
@@ -170,29 +172,36 @@ class AnalizerXunta(Analizer):
         
     def urlGeneratorXunta(self): 
         url_fija =  "https://www.xunta.gal/diario-oficial-galicia/mostrarContenido.do?ruta=/u01/app/oracle/shared/resources/pxdog100/doga/Publicados/"
-        urls = []
+        #urls = []
         hoy = datetime.now()
         tempdate = hoy
         for i in range(1,self.__days+1):
+            
             if (tempdate.weekday() not in [5,6]): 
+                self.setAnalysisState("DOGA",tempdate,"INICIADO")
                 url = url_fija + str(tempdate.year) + "/" + str(tempdate.year) + format(tempdate.month, '02') + format(tempdate.day, '02')
                 url += "/Secciones1_gl.html&paginaCompleta=false&fecha=" +  format(tempdate.day, '02') + "/" + format(tempdate.month, '02') + "/" + str(tempdate.year)
                 url_tmp = self.analizarPrincipal(url)
                 if (len(url_tmp) > 0):
                     for i in url_tmp:
-                        urls.append(i)
+                        self.analize(i)
+                        #urls.append(i)
+                self.setAnalysisState("DOGA",tempdate,"FINALIZADO")
+                print ("Marcado finalizado")
             tempdate = tempdate - timedelta(days=1)
 
-        return urls
+        return True
 
     def run(self): 
+        print ("Entrando en run")
         #self.registerListener()
         l2 = self.urlGeneratorXunta()
-        for item in l2:
-            self.analize(item)
-            print ("Esperando")
-            time.sleep(5)
-            print("Reanudando")
+        #for item in l2:
+        #    print (item)
+        #    self.analize(item)
+        #    print ("Esperando")
+        #    time.sleep(5)
+        #    print("Reanudando")
 
         self.getData()
 
@@ -218,3 +227,7 @@ class AnalizerXunta(Analizer):
 
     def imprimir(self):
         print ("Soy AnalizerXunta")
+
+print ("Trabajando...")
+a = AnalizerXunta(1)
+a.run()
