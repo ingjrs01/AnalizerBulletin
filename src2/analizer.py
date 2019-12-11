@@ -74,7 +74,7 @@ class Analizer():
 
     def checkBulletinExists(self,bulletin,fecha):
         cursor = self.db.cursor()
-        sql = "SELECT `id` FROM `analyses` WHERE `analysis_date` = %s AND " + bulletin.lower() + " = 'Finalizado' "        
+        sql = "SELECT `id` FROM `analyses` WHERE `analysis_date` = %s AND " + bulletin.lower() + " = 'FINALIZADO' "        
         cursor.execute(sql,(fecha))
         rows = cursor.fetchall()
         if (cursor.rowcount == 0):
@@ -131,7 +131,7 @@ class Analizer():
         fieldname = bulletin.lower()
 
         now = datetime.now()
-        sql = "UPDATE `analyses` SET " + fieldname + " = %s, `updated_at` = %s WHERE `analysis_date` = %s"        
+        sql = "UPDATE `analyses` SET " + fieldname + " = %s, `updated_at` = %s WHERE `analysis_date` = %s"  
         recordTuple = (state, now, fecha)
         try:
            cursor.execute(sql,recordTuple)

@@ -172,11 +172,10 @@ class AnalizerXunta(Analizer):
         
     def urlGeneratorXunta(self): 
         url_fija =  "https://www.xunta.gal/diario-oficial-galicia/mostrarContenido.do?ruta=/u01/app/oracle/shared/resources/pxdog100/doga/Publicados/"
-        #urls = []
-        hoy = datetime.now()
-        tempdate = hoy
+        tempdate = datetime.today()
+        print (tempdate)
         for i in range(1,self.__days+1):
-            
+            sqldate = date(int(tempdate.year),int(tempdate.month),int (tempdate.day))
             if (tempdate.weekday() not in [5,6]): 
                 self.setAnalysisState("DOGA",tempdate,"INICIADO")
                 url = url_fija + str(tempdate.year) + "/" + str(tempdate.year) + format(tempdate.month, '02') + format(tempdate.day, '02')
@@ -185,23 +184,15 @@ class AnalizerXunta(Analizer):
                 if (len(url_tmp) > 0):
                     for i in url_tmp:
                         self.analize(i)
-                        #urls.append(i)
-                self.setAnalysisState("DOGA",tempdate,"FINALIZADO")
-                print ("Marcado finalizado")
+                self.setAnalysisState("DOGA",sqldate,"FINALIZADO")
+
             tempdate = tempdate - timedelta(days=1)
 
         return True
 
     def run(self): 
-        print ("Entrando en run")
         #self.registerListener()
         l2 = self.urlGeneratorXunta()
-        #for item in l2:
-        #    print (item)
-        #    self.analize(item)
-        #    print ("Esperando")
-        #    time.sleep(5)
-        #    print("Reanudando")
 
         self.getData()
 
@@ -227,7 +218,3 @@ class AnalizerXunta(Analizer):
 
     def imprimir(self):
         print ("Soy AnalizerXunta")
-
-print ("Trabajando...")
-a = AnalizerXunta(1)
-a.run()

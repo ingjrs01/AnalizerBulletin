@@ -34,3 +34,9 @@ Route::post('/noticias/delete','NoticiasController@delete')->name('noticias.dele
 Route::post('/noticias/datos','NoticiasController@datos')->name('noticias.datos');
 
 Route::resource('analisis','AnalisisController');
+
+Route::get('/analizadores','AnalizerController@index')->name('analizers.index');
+
+Route::get('/analizadores/edit','AnalizerController@edit')->name('analizers.edit');
+
+Route::get('/analizadores/destroy','AnalizerController@edit')->name('analizers.destroy');

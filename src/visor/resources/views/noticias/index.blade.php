@@ -87,6 +87,7 @@ function markReaded(e,value)
         dataType: 'json',
         success: function(data) {
             $('.control-check-j').prop('checked', false);
+            $('#tableDefaultCheck').prop('checked',false);
             var name = "";
             for (i=0;i< data.length;i++)            
             {
@@ -190,6 +191,7 @@ function loadData(url)
         {
             $('.control-check-j').prop('checked', false);
             $('.check-menu').prop('checked', false);
+            $('#tableDefaultCheck').prop('checked',false);
             tabla = $('#table-data > tbody');
             tabla.remove();
             data = response.datos.data;

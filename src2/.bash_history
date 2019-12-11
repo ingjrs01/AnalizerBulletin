@@ -238,3 +238,85 @@ python3 main.py  1
 ls
 EXIT
 exit
+cd /root/
+ls
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main2.py 
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+ls
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 AnalizerModel.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 
+python3 main.py 1
+python analizerXunta.py 
+python analizerXunta.py 
+python analizerXunta.py 
+python analizerXunta.py 
+python analizerXunta.py 
+python analizerXunta.py 
+python analizerXunta.py 
+python analizerXunta.py 
+python analizerXunta.py 1
+python analizerXunta.py 1
+python analizerXunta.py 1
+python analizerXunta.py 1
+python analizerXunta.py 1
+python analizerXunta.py 1
+python analizerXunta.py 1
+python main.py 1
+python main.py 1
+exit
