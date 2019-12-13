@@ -78,4 +78,16 @@ class Noticia extends Model
         return ($tmp_f);
     }
 
+    public static function getYears()
+    {
+        $tmp = DB::table('noticias')->select('bulletin_year')->distinct()->get();
+        $years = [];
+        foreach ($tmp as $item)
+        {
+            $years [] = $item->bulletin_year;
+        } 
+             
+        return $years;
+    }
+
 }

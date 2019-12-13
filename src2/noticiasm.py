@@ -53,6 +53,7 @@ class Noticia():
         print ("Órgano: "    + self.organo)
         print ("Servicio: "  + self.servicio)
         print ("Noticia: "   + self.newname)
+        print ("Url: "       + self.url)
         print ("----------------------------------------------------------------------------")
 
     def save(self):

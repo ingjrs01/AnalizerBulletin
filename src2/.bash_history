@@ -320,3 +320,33 @@ python analizerXunta.py 1
 python main.py 1
 python main.py 1
 exit
+cd /root/
+ls
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+python3 analizerBoe.py 1
+exit
+cd /root/
+ls
+python3 analizerBoe.py 
+python3 analizerBoe.py 
+python3 analizerBoe.py 
+python3 analizerBoe.py 
+python3 analizerBoe.py 
+MERCADO DE DIVISAS
+python3 main.py 1
+python3 main.py 1
+python3 main.py 2
+python3 main.py 2
+python3 main.py 2

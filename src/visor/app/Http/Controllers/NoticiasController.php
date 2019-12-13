@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Noticia;
 use App\Tag;
+use App\Analizer;
+use App\Analysis; 
 
 class NoticiasController extends Controller
 {
@@ -25,8 +27,13 @@ class NoticiasController extends Controller
         $tags     = Tag::all();
         $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate);
 
-        $years    = [2019,2018];
-        $boletines=['BOPPO', 'DOGA','BOPCO','BOPLU','BOPOU'];
+        $years = Noticia::getYears();
+        $boles = Analizer::buscar();
+        $boletines = [];
+        foreach ($boles as $b)
+        {
+            $boletines[] = $b->name;
+        }
         // Para arreglar paginación
         $noticias->appends(array(
             'bulletin'      => $bulletin,

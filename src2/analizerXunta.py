@@ -74,7 +74,7 @@ class AnalizerXunta(Analizer):
             #self.setAnalysisState("DOGA",fecha,"FINALIZADO")
 
     def normalizar(self,noticia): 
-        if "Xulgado" in noticia.organismo:
+        if (("Xulgado" in noticia.organismo) or ("Tribunal" in noticia.organismo) or ("Audiencia" in noticia.organismo)):
             noticia.seccion = 'ADMINISTRACIÓN DE XUSTIZA'
             noticia.organismo = noticia.organismo.upper()
 
@@ -167,6 +167,17 @@ class AnalizerXunta(Analizer):
             noticia.organo = 'CONSELLERÍA DE INFRAESTRUCTURAS E VIVENDA'
             noticia.servicio = 'INSTITUTO GALEGO DA VIVENDA E SOLO'
 
+        if 'Axencia Galega da Calidade Alimentaria' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DO MEDIO RURAL'
+            noticia.servicio = 'AXENCIA GALEGA DA CALIDADE ALIMENTARIA'
+
+        if 'Academia Galega de Seguridade Pública' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'VICEPRESIDENCIA E CONSELLERÍA DE PRESIDENCIA, ADMINISTRACIÓNS PÚBLICAS E XUSTIZA'
+            noticia.servicio = 'ACADEMIA GALEGA DE SEGURIDADE PÚBLICA'
 
         return True
         
