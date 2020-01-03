@@ -9,22 +9,6 @@
 
 @section('contenido')
 
-<div class="container-fluid registerinicio">
-    <div class="row">
-        <div class="col-md-6 register-left regiter-left1">
-            <a href="{{ route('noticias.index') }}">
-                <img src="{{asset('img/calendario.png')}}" alt=""/>
-            </a>
-        </div>    
-        <div class="col-md-6 register-left">
-            
-            <h3>Bienvenid@</h3>
-            <p>Revisión de boletines oficiales !</p>
-            
-        </div>    
-    </div>
-</div>
-
 <div class="container-fluid ">
 
 @if ( session('datos'))
@@ -47,7 +31,16 @@
 
 <br>
 <form action="">
-    <input class="toggle" type="checkbox" data-toggle="toggle" checked  data-onstyle="primary">
+<!--    <input class="toggle" type="checkbox" data-toggle="toggle" checked  data-onstyle="primary">  -->
+<div class="col-1">{{ $item->name }}</div>
+<div class="col-1">{{ $item->active  }}</div>
+<div class="col-1">{{ $item->classname }}</div>
+<div class="col-1">{{ $item->module }}</div>
+<div class="col-1">{{ $item->created_at }}</div>
+<div class="col-1">{{ $item->updated_at }}</div>
+<div class="col-1"></div>
+
+
 </form>
 <table class=" table text-center" id="table-data">
     <thead>
@@ -95,10 +88,11 @@
         @endforeach
     </tbody>
 </table>
+<!--
 <div id="id_paginas">
     {{ $analizers }}
 </div>
-
+-->
 </div>
 
 {{--@include('plantilla.footer',['container'=>'container-fluid'])--}}

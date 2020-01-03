@@ -17,6 +17,7 @@ class AnalizerDepo(Analizer):
 
     def analize(self,url):
         try: 
+            print (url);
             html = urlopen(url)
         except HTTPError as e:
             print(e)
@@ -25,8 +26,14 @@ class AnalizerDepo(Analizer):
             print(u)
         else:
             content = html.read().decode('utf-8', 'ignore')
-            res = BeautifulSoup(content,"html.parser")                         
-            numero = int(res.find("h2",{"class":"numero"}).getText().split()[2])            
+            res = BeautifulSoup(content,"html.parser")
+            strnumero = res.find("h2",{"class":"numero"})
+            
+            if (strnumero is None):
+                print ("No existe boletín para este día")
+                return False
+
+            numero = int(strnumero.getText().split()[2])            
             info = res.find("span",{"class":"fecha"}).getText().split()
             year = int(info[len(info)-4])
             mes = self.meses.index(info[len(info)-6]) + 1 # El array comienza en 0

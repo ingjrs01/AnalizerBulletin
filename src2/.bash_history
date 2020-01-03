@@ -350,3 +350,43 @@ python3 main.py 1
 python3 main.py 2
 python3 main.py 2
 python3 main.py 2
+cd /root/
+ls
+python3 main.py 1
+ls
+exit
+cd /root/
+ls
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+ls
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+ping www.google.es
+ping www.google.es
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+python3 analizerCemit.py 
+exit
+ls
+cd /root/
+python3 main.py 
+exit
+cd /root/
+python3 main.py 1
+python3 main.py 1
+python3 main.py 1
+exit
+cd /root/
+ls
+python3 main.py 1
+exit

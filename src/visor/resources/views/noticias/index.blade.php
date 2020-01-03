@@ -286,7 +286,7 @@ $( document ).ready(function() {
 @endsection
 
 @section('contenido')
-
+<!--
 <div class="container-fluid registerinicio">
     <div class="row">
         <div class="col-md-6 register-left regiter-left1">
@@ -302,7 +302,7 @@ $( document ).ready(function() {
         </div>    
     </div>
 </div>
-
+-->
 <div class="container-fluid ">
 
 @if ( session('datos'))
@@ -326,7 +326,7 @@ $( document ).ready(function() {
 <br>
 @php ($destacadol = ['Destacados', 'No Destacados'])
 <nav class="navbar navbar-expand-lg navbar-light">
-<a class="navbar-brand" href="#">Boletines</a>
+<a class="navbar-brand" href="#">Menú</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>

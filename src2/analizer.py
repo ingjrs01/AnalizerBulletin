@@ -111,11 +111,11 @@ class Analizer():
         if (cursor.rowcount > 0):
             return False        
 
-        sql = "INSERT INTO `analyses` (`analysis_date`,`doga`,`boppo`,`bopco`,`boplu`,`bopou`,`created_at`,`updated_at`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO `analyses` (`analysis_date`,`doga`,`boppo`,`bopco`,`boplu`,`bopou`,`boe`,`created_at`,`updated_at`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         now = datetime.now()     
         estado = 'CREADO'   
 
-        recordTuple = (adate,estado,estado,estado,estado,estado, now, now)
+        recordTuple = (adate,estado, estado,estado,estado,estado,estado, now, now)
         try:
            cursor.execute(sql,recordTuple)
            self.db.commit()

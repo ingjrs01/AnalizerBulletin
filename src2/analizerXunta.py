@@ -27,6 +27,10 @@ class AnalizerXunta(Analizer):
             content = html.read().decode('utf-8', 'ignore')
             res = BeautifulSoup(content,"html.parser")
             info = res.find("div",{"id":"publicacionInfo"})
+            if (info is None):
+                print("NO hay datos de este boletín")
+                return False
+
             numero = int(info.span.getText().split()[1]) 
             # obtener el año. 
             info = res.find("span",{"id":"DOGData"})
@@ -179,6 +183,12 @@ class AnalizerXunta(Analizer):
             noticia.organo = 'VICEPRESIDENCIA E CONSELLERÍA DE PRESIDENCIA, ADMINISTRACIÓNS PÚBLICAS E XUSTIZA'
             noticia.servicio = 'ACADEMIA GALEGA DE SEGURIDADE PÚBLICA'
 
+        if 'Axencia Galega das Industrias Culturais' in noticia.organismo: 
+            noticia.seccion = 'ADMINISTRACIÓN AUTONÓMICA'
+            noticia.organismo = 'XUNTA DE GALICIA'
+            noticia.organo = 'CONSELLERÍA DE CULTURA E TURISMO'
+            noticia.servicio = 'ACADEMIA GALEGA DE SEGURIDADE PÚBLICA'                        
+
         return True
         
     def urlGeneratorXunta(self): 
@@ -219,7 +229,11 @@ class AnalizerXunta(Analizer):
         else:        
             content = html.read()
             res = BeautifulSoup(content,"html.parser")
-            index = res.find("div",{"class","contidoDesplegado"})    
+            index = res.find("div",{"class","contidoDesplegado"})
+            if (index is None) :
+                print("NO se ha encontrado boletín para este día")
+                return []
+                
             lis = index.findAll("li",{"class","dog-toc-sumario"})
             for li in lis:
                 if (li.a is not None):

@@ -5,22 +5,6 @@
 
 @section('contenido')
 
-<div class="container-fluid registerinicio">
-    <div class="row">
-        <div class="col-md-6 register-left regiter-left1">
-            <a href="{{ route('noticias.index') }}">
-                <img src="{{asset('img/calendario.png')}}" alt=""/>
-            </a>
-        </div>    
-        <div class="col-md-6 register-left">
-            
-            <h3>Bienvenid@</h3>
-            <p>Revisión de boletines oficiales !</p>
-            
-        </div>    
-    </div>
-</div>
-
 <div class="container-fluid ">
 
 @if ( session('datos'))

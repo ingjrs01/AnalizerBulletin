@@ -89,6 +89,7 @@ class Noticia():
         self.organismo    = self.organismo.upper()
         self.organo       = self.organo.upper()
         self.servicio     = self.servicio.upper()
+        self.newname      = self.newname[:999]
         self.newname      = self.newname.upper()
 
     

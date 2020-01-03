@@ -26,7 +26,12 @@ class AnalizerCoruna(Analizer):
             content = html.read().decode('utf-8', 'ignore')
             res = BeautifulSoup(content,"html.parser")      
 
-            info = res.find("div",{"id":"infoBoletin"}).find("a").getText()
+            s_info = res.find("div",{"id":"infoBoletin"})
+            if (s_info is None):
+                print ("No se ha encontrado boletín")
+                return False
+
+            info = s_info.find("a").getText()
             cachos = info.split()
             numero = int(cachos[4])
             dia = int(cachos[7])

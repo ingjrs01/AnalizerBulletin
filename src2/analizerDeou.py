@@ -35,7 +35,12 @@ class AnalizerDeou(Analizer):
             response = requests.post(url, data=post_params)   
             res = BeautifulSoup(response.text, 'html.parser')    
 
-            sumario = res.find("div",{"class":"resumenSumario"}).getText().split()
+            texto = res.find("div",{"class":"resumenSumario"})
+            if (texto is None): 
+                print ("No se ha encontrado boletín")
+                return False
+
+            sumario = texto.getText().split()
             numero = int(sumario[4])
             year = int(sumario[11])
             mes =  self.meses.index(sumario[9]) + 1 # El array comienza en 0
