@@ -23,9 +23,10 @@ class NoticiasController extends Controller
         $destacado   = $request->get('destacado');
         $search_tag  = $request->get('tag');
         $sdate       = $request->get('date');
+        $readed      = $request->get('readed_filter');
 
         $tags     = Tag::all();
-        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate);
+        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate,$readed);
 
         $years = Noticia::getYears();
         $boles = Analizer::buscar();
@@ -201,8 +202,10 @@ class NoticiasController extends Controller
         $bulletin_no = $request->get('bulletin_no');
         $destacado   = $request->get('destacado');
         $search_tag  = $request->get('tag');
-        $sdate = $request->get('date');
-        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate);
+        $sdate       = $request->get('date');
+        $readed      = $request->get('readed_filter');
+
+        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate,$readed);
 
         $resultados = array('datos'=>$noticias,'paginas'=>$noticias->links()->render());
         return json_encode($resultados);

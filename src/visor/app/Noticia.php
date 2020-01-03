@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Noticia extends Model
 {
-    public function scopeBuscar($query, $bulletin,$bulletin_year, $bulletin_no,$destacado,$tag,$sdate)
+    public function scopeBuscar($query, $bulletin,$bulletin_year, $bulletin_no,$destacado,$tag,$sdate,$readed)
     {
         $conditions = [];
         $query->select('noticias.id','bulletin','bulletin_year','bulletin_no','seccion','organismo','organo','bulletin_date','organization','newname','url','fav','notify','readed','noticias.created_at','noticias.updated_at');
@@ -31,6 +31,16 @@ class Noticia extends Model
         if ($destacado == "No Destacados")
         {
             $conditions[] = ['fav', '=', 0];
+        }
+
+        if ($readed == "readed")
+        {
+            $conditions[] = ['readed', '=', 1];
+        }
+
+        if ($readed == "unreaded")
+        {
+            $conditions[] = ['readed', '=', 0];
         }
 
         if ($sdate)

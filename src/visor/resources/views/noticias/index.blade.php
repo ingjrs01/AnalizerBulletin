@@ -168,6 +168,7 @@ function getPage()
 
 function loadData(url)
 {
+    console.log("loadData");
     if (url == "")        
         pagina = getPage();    
     else
@@ -182,7 +183,8 @@ function loadData(url)
             'bulletin_no': $('#id_bulletin_no').val(), 
             'destacado': $('#idDestacado option:selected').text(),
             'tag': $('#idTag').val(),
-            'date': $('#id_date').val()
+            'date': $('#id_date').val(),
+            'readed_filter':  $('#readed_filter option:selected').val()
         },
         url: "{{ route('noticias.datos')}}" + "?page=" + pagina,
         type:'POST',
@@ -370,6 +372,12 @@ $( document ).ready(function() {
     </ul>
     <form  class="form-inline my-2 my-lg-0" method="get">    
     <input class="form-control controlb" type="date" name="date" value="{{$sdate}}" id="id_date" >
+
+    <select name="readed_filter" id="readed_filter" class="form-control mr-sm-2 controlb" onchange="loadData('')">
+    <option value="all">Todos</option>
+    <option value="readed">Leídos</option>
+    <option value="unreaded">No leídos</option>
+    </select>
 
     <select name="tag" class="form-control mr-sm-2 controlb" id="idTag" onchange="loadData('')">
         <option>Etiquetas</option>
