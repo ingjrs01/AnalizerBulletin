@@ -105,7 +105,8 @@ class AnalizerBoe(Analizer):
             noticia.organismo = noticia.organo
             noticia.organo = ""
             noticia.servicio = ""
-        
+
+       
     def urlGenerator(self): 
         urls = []
         tempdate = datetime.now()

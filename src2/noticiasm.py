@@ -58,6 +58,7 @@ class Noticia():
 
     def save(self):
         self.upper()
+        self.setReaded()
         cursor = self.__db.cursor()
         sql = "INSERT INTO " + self.__tablename
         sql += "(bulletin, bulletin_year, bulletin_no, bulletin_date, seccion, organismo, organo, servicio, organization, newname,"
@@ -91,5 +92,15 @@ class Noticia():
         self.servicio     = self.servicio.upper()
         self.newname      = self.newname[:999]
         self.newname      = self.newname.upper()
+
+    def setReaded(self):
+        if ("ANUNCIO DE LICITACIÓN" in self.newname):
+            self.readed = 1
+        if ("ANUNCIO DE FORMALIZACIÓN DE CONTRATOS" in self.newname):
+            self.readed = 1
+        if ("EXTRAVÍO DE TÍTULO UNIVERSITARIO" in self.newname):
+            self.readed = 1
+        if (self.seccion == "IV. ADMINISTRACIÓN DE JUSTICIA"):
+            self.readed = 1
 
     
