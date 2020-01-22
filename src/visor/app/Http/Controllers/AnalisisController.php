@@ -23,6 +23,7 @@ class AnalisisController extends Controller
         #$sdate       = $request->get('date');
 
         $dias = Analysis::buscar();
+        //return ($dias);
 
         #$noticias->appends(array(
         #    'bulletin'      => $bulletin,
@@ -32,8 +33,13 @@ class AnalisisController extends Controller
         #    'tag'           => $search_tag
         #));
 
-        return view('analisis.index',compact('dias'));
+        return view('analisis.analysis',compact('dias'));
 
+    }
+
+    public function ajax() 
+    {
+        return Analysis::buscar();
     }
 
     /**

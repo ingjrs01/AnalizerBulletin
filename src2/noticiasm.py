@@ -100,6 +100,12 @@ class Noticia():
             self.readed = 1
         if ("EXTRAVÍO DE TÍTULO UNIVERSITARIO" in self.newname):
             self.readed = 1
+        if ("SANCIONADOR" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+            self.readed = 1
+        if ("EXECUCIÓN TÍTULOS XUDICIAIS" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+            self.readed = 1
+        if ("OBRIGA DE XESTIÓN DA BIOMASA" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+            self.readed = 1
         if (self.seccion == "IV. ADMINISTRACIÓN DE JUSTICIA"):
             self.readed = 1
 

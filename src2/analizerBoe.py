@@ -24,6 +24,7 @@ class AnalizerBoe(Analizer):
             print("Servidor depo no encontrado " + url)
             print(u)
         else:
+            print ("Iniciando Análisis del BOE...")
             content = html.read().decode('utf-8', 'ignore')
             res = BeautifulSoup(content,"html.parser") 
 
@@ -111,7 +112,7 @@ class AnalizerBoe(Analizer):
         urls = []
         tempdate = datetime.now()
         for i in range(1,self.__days+1):
-            if (tempdate.weekday() not in [5,6]): 
+            if (tempdate.weekday() not in [6]): 
                 url = "https://www.boe.es/boe/dias/" + str(tempdate.year) + "/" + format(tempdate.month, '02') + "/" + format(tempdate.day, '02')
                 urls.append(url)
             tempdate = tempdate - timedelta(days=1)

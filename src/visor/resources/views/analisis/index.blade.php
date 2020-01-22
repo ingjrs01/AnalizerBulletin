@@ -4,7 +4,6 @@
 @endsection
 
 @section('contenido')
-
 <div class="container-fluid ">
 
 @if ( session('datos'))
@@ -26,7 +25,8 @@
 @endif
 
 <br>
-
+<prueba-component></prueba-component>
+<p>lalala</p>
 <table class=" table text-center" id="table-data">
     <thead>
     <tr>
