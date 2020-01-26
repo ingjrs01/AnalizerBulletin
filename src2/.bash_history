@@ -420,3 +420,11 @@ python main.py 1
 cd /root/
 ls
 python3 main.py 1
+cd /root/
+ls
+python3 main.py 1
+exit
+cd /root/
+ls
+python3 main.py 1
+exit

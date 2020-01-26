@@ -2,9 +2,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('prueba-component', require('./components/PruebaComponent.vue').default);
+Vue.component('pagination-component', require('./components/PaginationComponent.vue').default);
 Vue.component('analysis-component', require('./components/AnalysisComponent.vue').default);
 
 

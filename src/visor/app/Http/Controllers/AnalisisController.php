@@ -39,7 +39,19 @@ class AnalisisController extends Controller
 
     public function ajax() 
     {
-        return Analysis::buscar();
+        $resultados = Analysis::buscar();
+
+        $pagination = [
+            'total'        => $resultados->total(),
+            'current_page' => $resultados->currentPage(),
+            'per_page'     => $resultados->perPage(),
+            'last_page'    => $resultados->lastPage(),
+            'from'         => $resultados->firstItem(),
+            'to'           => $resultados->lastItem(),
+        ];
+        
+        //return dd($pagination);
+        return ['pagination'=>$pagination,'data'=>$resultados];
     }
 
     /**

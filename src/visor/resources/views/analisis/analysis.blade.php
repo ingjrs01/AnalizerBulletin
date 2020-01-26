@@ -27,10 +27,6 @@
 <br>
 <analysis-component></analysis-component>
 
-<div id="id_paginas">
-    {{ $dias }}
-</div>
-
 </div>
 
 {{--@include('plantilla.footer',['container'=>'container-fluid'])--}}
