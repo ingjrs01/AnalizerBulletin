@@ -50,7 +50,7 @@
             </tbody>
         </table>
 
-        <pagination-component url="http://localhost:8001/visor/public/noticias.datos" @paginate_evt="lines = $event"></pagination-component>
+        <pagination-component url="http://localhost:8001/news/datos" @paginate_evt="lines = $event"></pagination-component>
     </div>
 </template>
 

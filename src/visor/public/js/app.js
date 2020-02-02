@@ -2171,15 +2171,13 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    var _this = this;
-
+    console.log("Pidiendo datos");
     axios.get(this.url).then(function (response) {
       //console.debug(response.data.pagination['current_page']);
       //this.page = response.data.pagination['current_page'];
-      _this.lines = response.data.data.data;
-      _this.pagination = response.data.pagination;
-
-      _this.$emit('paginate_evt', _this.lines);
+      console.debug(response); //this.lines = response.data.data.data;
+      //this.pagination = response.data.pagination;
+      //this.$emit('paginate_evt',this.lines);
     });
     console.log('Paginación cargada');
   },
@@ -2188,17 +2186,17 @@ __webpack_require__.r(__webpack_exports__);
       return this.pagination.current_page === page;
     },
     changePage: function changePage(page) {
-      var _this2 = this;
+      var _this = this;
 
       if (page > this.pagination.last_page) {
         page = this.pagination.last_page;
       }
 
       axios.get(this.url + "?page=" + page).then(function (response) {
-        _this2.lines = response.data.data.data;
-        _this2.pagination = response.data.pagination;
+        _this.lines = response.data.data.data;
+        _this.pagination = response.data.pagination;
 
-        _this2.$emit('paginate_evt', _this2.lines);
+        _this.$emit('paginate_evt', _this.lines);
       });
     }
   },
@@ -38001,7 +37999,7 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("pagination-component", {
-        attrs: { url: "http://localhost:8001/visor/public/noticias.datos" },
+        attrs: { url: "http://localhost:8001/news/datos" },
         on: {
           paginate_evt: function($event) {
             _vm.lines = $event

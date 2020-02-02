@@ -30,12 +30,15 @@
             }
         },
         mounted() {
+            console.log("Pidiendo datos");
             axios.get(this.url).then((response)=>{
                 //console.debug(response.data.pagination['current_page']);
                 //this.page = response.data.pagination['current_page'];
-                this.lines = response.data.data.data;
-                this.pagination = response.data.pagination;
-                this.$emit('paginate_evt',this.lines);
+
+                console.debug(response);
+                //this.lines = response.data.data.data;
+                //this.pagination = response.data.pagination;
+                //this.$emit('paginate_evt',this.lines);
             });
 
             console.log('Paginación cargada');

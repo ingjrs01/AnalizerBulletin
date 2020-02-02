@@ -33,7 +33,7 @@ services:
         volumes:
             #- ./dump:/docker-entrypoint-initdb.d
             - ./conf/mysql/:/etc/mysql/conf.d 
-            #- persistent:/var/lib/mysql
+            - persistent:/var/lib/mysql
         networks:
             - default
     phpmyadmin:
