@@ -1,13 +1,109 @@
 <template>
     <div class="container">
         <h2>Componente para mostrar Noticias</h2>
+        <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">Menú</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown active">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Operaciones
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#" onclick="deleteItems(event)">Eliminar</a>                  
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-tag"></i>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <!--@foreach ($tags as $tag)-->
+                        <a v-for="tag in tags" class="dropdown-item" href="#">
+                            <input type="checkbox" class="check-menu" :id="'checkMenu-' + tag.id" @click="clicktag(tag.id)" />{{ tag.name }}
+                        </a>
+                    <!--@endforeach-->
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Aplicar</a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Marcar
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#" @click="markReaded(true)">Marcar como leído</a>
+                    <a class="dropdown-item" href="#" @click="markReaded(false)">Marcar como no leído</a>
+                </div>
+            </li>
+
+            </ul>
+            <form  class="form-inline my-2 my-lg-0" method="get">
+            <input class="form-control controlb" type="date" name="date" value="03/02/2020" id="id_date" >
+
+            <select name="readed_filter" id="readed_filter" class="form-control mr-sm-2 controlb" > <!--onchange="loadData('')">-->
+                <option value="all">Todos</option>
+                <option value="readed">Leídos</option>
+                <option value="unreaded">No leídos</option>
+            </select>
+            <!--
+            <select name="tag" class="form-control mr-sm-2 controlb" id="idTag" onchange="loadData('')">
+                <option>Etiquetas</option>
+                @foreach($tags as $tag)
+                    <option 
+                    @if ($tag->id == $search_tag)
+                        selected
+                    @endif
+                    value="{{$tag->id}}">{{$tag->name}}</option>
+                @endforeach
+            </select>
+            -->
+            <!--
+            <select name="destacado" class="form-control mr-sm-2 controlb" id="idDestacado" onchange="loadData('')">
+                <option>Todos</option>
+                @foreach($destacadol as $des)
+                    <option 
+                    @if ($des == $destacado)
+                        selected
+                    @endif
+                    >{{$des}}</option>
+                @endforeach
+            </select>
+            -->
+            
+            <select name="bulletin" class="form-control mr-sm-2 controlb" id="id_bulletin" onchange="loadData('')">
+                <option>Boletín</option>
+                <option v-for="boletin in boletines">
+                    {{ boletin }}
+                </option>
+            </select>
+                        
+            <select name="bulletin_year" class="form-control mr-sm-2 controlb" id="id_bulletin_year" onchange="loadData('')">
+                <option>Año</option>
+                    <option v-for="y in years">
+                        {{y}}
+                    </option>
+            </select>
+            
+            <input name="bulletin_no" id="id_bulletin_no" class="form-control mr-sm-1 controlb" type="search" placeholder="Número" aria-label="Search" v-model="bulletin_no">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="loadData('')">Buscar</button>    
+            </form>
+        </div>
+        </nav>
+        <br>
 
         <table class="table-responsive table text-center" id="table-data">
             <thead>
             <tr>
                 <th scope="col">
                     <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="tableDefaultCheck" onclick="checkAll(event)">
+                        <input type="checkbox" class="custom-control-input" id="tableDefaultCheck" v-model="selectAll" @click="select">
                         <label class="custom-control-label" for="tableDefaultCheck">#</label>
                     </div>
                 </th>
@@ -26,7 +122,7 @@
                 <tr  v-for="(line, index) in lines" class="table-default" :id="'table-row-id-' + line.id">
                     <th scope="row">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input control-check-j" :id="'tableDefaultCheck' + line.id" value="line.id" @click="selectSingle()">
+                            <input type="checkbox" class="custom-control-input control-check-j" :id="'tableDefaultCheck' + line.id" value="line.id" @click="silectSingle()" v-model="selected">
                             <label class="custom-control-label" :for="'tableDefaultCheck' + line.id"> {{ line.id }} </label>
                         </div>
                     </th>
@@ -50,7 +146,7 @@
             </tbody>
         </table>
 
-        <pagination-component url="http://localhost:8001/news/datos" @paginate_evt="lines = $event"></pagination-component>
+        <pagination-component :pagination="this.pagination2" @paginate_evt="loadData"></pagination-component>
     </div>
 </template>
 
@@ -59,11 +155,27 @@
         data() {
             return {
                 lines: [],
+                tags : [
+                    {'id' : 1,'name' : 'Comedia'},
+                    {'id' : 3,'name' : 'Actores'}
+                ],
+                bulletin_no: 2020,
+                years: [2018,2019,2020],
+                boletines: ["DOGA", "BOPPO", "BOPCO", "BOPLU", "BOPOU", "BOE"],
                 selected: [],
-                selectAll: false
+                selectAll: false,
+                pagination2:  {
+                    'current_page': 1, //1,
+                    'total'       : 1, //45,
+                    'last_page'   : 1, //3,
+                    'per_page'    : 1, //10,
+                    'from'        : 1, //1,
+                    'to'          : 10 //10
+                }
             }
         },
         mounted() {
+            this.loadData(1);
             console.log('Componente noticias preparado.');
         },
         methods: {
@@ -75,8 +187,16 @@
                     }
                 }
             },
-            selectSingle() {
+            silectSingle() {
                 console.log("Pincha un select");
+            },
+            loadData(page) {
+                axios.get("news/datos" + `?page=` + page).then((response)=>{
+                    this.lines = response.data.data.data;
+                    this.pagination2 = response.data.pagination;
+                    this.$emit('paginate_evt',this.lines);
+                });
+
             }
         }
     }

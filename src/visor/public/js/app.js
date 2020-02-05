@@ -2096,15 +2096,136 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       lines: [],
+      tags: [{
+        'id': 1,
+        'name': 'Comedia'
+      }, {
+        'id': 3,
+        'name': 'Actores'
+      }],
+      bulletin_no: 2020,
+      years: [2018, 2019, 2020],
+      boletines: ["DOGA", "BOPPO", "BOPCO", "BOPLU", "BOPOU", "BOE"],
       selected: [],
-      selectAll: false
+      selectAll: false,
+      pagination2: {
+        'current_page': 1,
+        //1,
+        'total': 1,
+        //45,
+        'last_page': 1,
+        //3,
+        'per_page': 1,
+        //10,
+        'from': 1,
+        //1,
+        'to': 10 //10
+
+      }
     };
   },
   mounted: function mounted() {
+    this.loadData(1);
     console.log('Componente noticias preparado.');
   },
   methods: {
@@ -2117,8 +2238,18 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
-    selectSingle: function selectSingle() {
+    silectSingle: function silectSingle() {
       console.log("Pincha un select");
+    },
+    loadData: function loadData(page) {
+      var _this = this;
+
+      axios.get("news/datos" + "?page=" + page).then(function (response) {
+        _this.lines = response.data.data.data;
+        _this.pagination2 = response.data.pagination;
+
+        _this.$emit('paginate_evt', _this.lines);
+      });
     }
   }
 });
@@ -2149,11 +2280,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['url'],
+  props: ['pagination'],
   data: function data() {
     return {
       lines: [],
-      pagination: {
+      pagination3: {
         'current_page': 1,
         //1,
         'total': 1,
@@ -2167,18 +2298,15 @@ __webpack_require__.r(__webpack_exports__);
         'to': 10 //10
 
       },
-      offset: 2
+      offset: 1
     };
   },
   mounted: function mounted() {
-    console.log("Pidiendo datos");
-    axios.get(this.url).then(function (response) {
-      //console.debug(response.data.pagination['current_page']);
-      //this.page = response.data.pagination['current_page'];
-      console.debug(response); //this.lines = response.data.data.data;
-      //this.pagination = response.data.pagination;
-      //this.$emit('paginate_evt',this.lines);
-    });
+    //axios.get(this.url).then((response)=>{
+    //    this.lines = response.data.data.data;
+    //    this.pagination = response.data.pagination;
+    //    this.$emit('paginate_evt',this.lines);
+    //});
     console.log('Paginación cargada');
   },
   methods: {
@@ -2186,18 +2314,20 @@ __webpack_require__.r(__webpack_exports__);
       return this.pagination.current_page === page;
     },
     changePage: function changePage(page) {
-      var _this = this;
-
       if (page > this.pagination.last_page) {
         page = this.pagination.last_page;
       }
 
-      axios.get(this.url + "?page=" + page).then(function (response) {
-        _this.lines = response.data.data.data;
-        _this.pagination = response.data.pagination;
+      if (page < 1) {
+        page = 1;
+      }
 
-        _this.$emit('paginate_evt', _this.lines);
-      });
+      this.$emit('paginate_evt', page);
+      this.pagination.current_page = page; //axios.get(this.url + `?page=` + page).then((response)=>{
+      //    this.lines = response.data.data.data;
+      //    this.pagination = response.data.pagination;
+      //    this.$emit('paginate_evt',this.lines);
+      //});
     }
   },
   computed: {
@@ -37898,6 +38028,238 @@ var render = function() {
     [
       _c("h2", [_vm._v("Componente para mostrar Noticias")]),
       _vm._v(" "),
+      _c("nav", { staticClass: "navbar navbar-expand-lg navbar-light" }, [
+        _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
+          _vm._v("Menú")
+        ]),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "collapse navbar-collapse",
+            attrs: { id: "navbarSupportedContent" }
+          },
+          [
+            _c("ul", { staticClass: "navbar-nav mr-auto" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item dropdown" }, [
+                _vm._m(2),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "dropdown-menu",
+                    attrs: { "aria-labelledby": "navbarDropdown" }
+                  },
+                  [
+                    _vm._l(_vm.tags, function(tag) {
+                      return _c(
+                        "a",
+                        { staticClass: "dropdown-item", attrs: { href: "#" } },
+                        [
+                          _c("input", {
+                            staticClass: "check-menu",
+                            attrs: {
+                              type: "checkbox",
+                              id: "checkMenu-" + tag.id
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.clicktag(tag.id)
+                              }
+                            }
+                          }),
+                          _vm._v(_vm._s(tag.name) + "\n                    ")
+                        ]
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "dropdown-divider" }),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      { staticClass: "dropdown-item", attrs: { href: "#" } },
+                      [_vm._v("Aplicar")]
+                    )
+                  ],
+                  2
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", { staticClass: "nav-item dropdown" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link dropdown-toggle",
+                    attrs: {
+                      href: "#",
+                      id: "navbarDropdown",
+                      role: "button",
+                      "data-toggle": "dropdown",
+                      "aria-haspopup": "true",
+                      "aria-expanded": "false"
+                    }
+                  },
+                  [_vm._v("\n                Marcar\n            ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "dropdown-menu",
+                    attrs: { "aria-labelledby": "navbarDropdown" }
+                  },
+                  [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "dropdown-item",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            return _vm.markReaded(true)
+                          }
+                        }
+                      },
+                      [_vm._v("Marcar como leído")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "dropdown-item",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            return _vm.markReaded(false)
+                          }
+                        }
+                      },
+                      [_vm._v("Marcar como no leído")]
+                    )
+                  ]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                staticClass: "form-inline my-2 my-lg-0",
+                attrs: { method: "get" }
+              },
+              [
+                _c("input", {
+                  staticClass: "form-control controlb",
+                  attrs: {
+                    type: "date",
+                    name: "date",
+                    value: "03/02/2020",
+                    id: "id_date"
+                  }
+                }),
+                _vm._v(" "),
+                _vm._m(3),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    staticClass: "form-control mr-sm-2 controlb",
+                    attrs: {
+                      name: "bulletin",
+                      id: "id_bulletin",
+                      onchange: "loadData('')"
+                    }
+                  },
+                  [
+                    _c("option", [_vm._v("Boletín")]),
+                    _vm._v(" "),
+                    _vm._l(_vm.boletines, function(boletin) {
+                      return _c("option", [
+                        _vm._v(
+                          "\n                " +
+                            _vm._s(boletin) +
+                            "\n            "
+                        )
+                      ])
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    staticClass: "form-control mr-sm-2 controlb",
+                    attrs: {
+                      name: "bulletin_year",
+                      id: "id_bulletin_year",
+                      onchange: "loadData('')"
+                    }
+                  },
+                  [
+                    _c("option", [_vm._v("Año")]),
+                    _vm._v(" "),
+                    _vm._l(_vm.years, function(y) {
+                      return _c("option", [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(y) +
+                            "\n                "
+                        )
+                      ])
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.bulletin_no,
+                      expression: "bulletin_no"
+                    }
+                  ],
+                  staticClass: "form-control mr-sm-1 controlb",
+                  attrs: {
+                    name: "bulletin_no",
+                    id: "id_bulletin_no",
+                    type: "search",
+                    placeholder: "Número",
+                    "aria-label": "Search"
+                  },
+                  domProps: { value: _vm.bulletin_no },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.bulletin_no = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-outline-success my-2 my-sm-0",
+                    attrs: { type: "button", onclick: "loadData('')" }
+                  },
+                  [_vm._v("Buscar")]
+                )
+              ]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("br"),
+      _vm._v(" "),
       _c(
         "table",
         {
@@ -37905,7 +38267,104 @@ var render = function() {
           attrs: { id: "table-data" }
         },
         [
-          _vm._m(0),
+          _c("thead", [
+            _c("tr", [
+              _c("th", { attrs: { scope: "col" } }, [
+                _c("div", { staticClass: "custom-control custom-checkbox" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.selectAll,
+                        expression: "selectAll"
+                      }
+                    ],
+                    staticClass: "custom-control-input",
+                    attrs: { type: "checkbox", id: "tableDefaultCheck" },
+                    domProps: {
+                      checked: Array.isArray(_vm.selectAll)
+                        ? _vm._i(_vm.selectAll, null) > -1
+                        : _vm.selectAll
+                    },
+                    on: {
+                      click: _vm.select,
+                      change: function($event) {
+                        var $$a = _vm.selectAll,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 && (_vm.selectAll = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.selectAll = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.selectAll = $$c
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "label",
+                    {
+                      staticClass: "custom-control-label",
+                      attrs: { for: "tableDefaultCheck" }
+                    },
+                    [_vm._v("#")]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "th",
+                { staticStyle: { width: "33%" }, attrs: { scope: "col" } },
+                [_vm._v("Noticia")]
+              ),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("Boletín")]),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("Nº")]),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("Año")]),
+              _vm._v(" "),
+              _c(
+                "th",
+                { staticStyle: { width: "10%" }, attrs: { scope: "col" } },
+                [_vm._v("Sección")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                { staticStyle: { width: "10%" }, attrs: { scope: "col" } },
+                [_vm._v("Organismo")]
+              ),
+              _vm._v(" "),
+              _c(
+                "th",
+                { staticStyle: { width: "12%" }, attrs: { scope: "col" } },
+                [_vm._v("Órgano")]
+              ),
+              _vm._v(" "),
+              _c("th", { attrs: { scope: "col" } }, [_vm._v("Fecha")]),
+              _vm._v(" "),
+              _c(
+                "th",
+                {
+                  staticClass: "align-right",
+                  staticStyle: { width: "2%" },
+                  attrs: { scope: "col" }
+                },
+                [_vm._v("Op")]
+              )
+            ])
+          ]),
           _vm._v(" "),
           _c(
             "tbody",
@@ -37923,15 +38382,47 @@ var render = function() {
                       { staticClass: "custom-control custom-checkbox" },
                       [
                         _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.selected,
+                              expression: "selected"
+                            }
+                          ],
                           staticClass: "custom-control-input control-check-j",
                           attrs: {
                             type: "checkbox",
                             id: "tableDefaultCheck" + line.id,
                             value: "line.id"
                           },
+                          domProps: {
+                            checked: Array.isArray(_vm.selected)
+                              ? _vm._i(_vm.selected, "line.id") > -1
+                              : _vm.selected
+                          },
                           on: {
                             click: function($event) {
-                              return _vm.selectSingle()
+                              return _vm.silectSingle()
+                            },
+                            change: function($event) {
+                              var $$a = _vm.selected,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = "line.id",
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 && (_vm.selected = $$a.concat([$$v]))
+                                } else {
+                                  $$i > -1 &&
+                                    (_vm.selected = $$a
+                                      .slice(0, $$i)
+                                      .concat($$a.slice($$i + 1)))
+                                }
+                              } else {
+                                _vm.selected = $$c
+                              }
                             }
                           }
                         }),
@@ -37988,7 +38479,7 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(1, true)
+                    _vm._m(4, true)
                   ])
                 ]
               )
@@ -37999,12 +38490,8 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("pagination-component", {
-        attrs: { url: "http://localhost:8001/news/datos" },
-        on: {
-          paginate_evt: function($event) {
-            _vm.lines = $event
-          }
-        }
+        attrs: { pagination: this.pagination2 },
+        on: { paginate_evt: _vm.loadData }
       })
     ],
     1
@@ -38015,65 +38502,100 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [
-          _c("div", { staticClass: "custom-control custom-checkbox" }, [
-            _c("input", {
-              staticClass: "custom-control-input",
-              attrs: {
-                type: "checkbox",
-                id: "tableDefaultCheck",
-                onclick: "checkAll(event)"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "label",
-              {
-                staticClass: "custom-control-label",
-                attrs: { for: "tableDefaultCheck" }
-              },
-              [_vm._v("#")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "33%" }, attrs: { scope: "col" } }, [
-          _vm._v("Noticia")
-        ]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Boletín")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nº")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Año")]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "10%" }, attrs: { scope: "col" } }, [
-          _vm._v("Sección")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "10%" }, attrs: { scope: "col" } }, [
-          _vm._v("Organismo")
-        ]),
-        _vm._v(" "),
-        _c("th", { staticStyle: { width: "12%" }, attrs: { scope: "col" } }, [
-          _vm._v("Órgano")
-        ]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Fecha")]),
-        _vm._v(" "),
-        _c(
-          "th",
-          {
-            staticClass: "align-right",
-            staticStyle: { width: "2%" },
-            attrs: { scope: "col" }
-          },
-          [_vm._v("Op")]
-        )
-      ])
+    return _c(
+      "button",
+      {
+        staticClass: "navbar-toggler",
+        attrs: {
+          type: "button",
+          "data-toggle": "collapse",
+          "data-target": "#navbarSupportedContent",
+          "aria-controls": "navbarSupportedContent",
+          "aria-expanded": "false",
+          "aria-label": "Toggle navigation"
+        }
+      },
+      [_c("span", { staticClass: "navbar-toggler-icon" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "nav-item dropdown active" }, [
+      _c(
+        "a",
+        {
+          staticClass: "nav-link dropdown-toggle",
+          attrs: {
+            href: "#",
+            id: "navbarDropdown",
+            role: "button",
+            "data-toggle": "dropdown",
+            "aria-haspopup": "true",
+            "aria-expanded": "false"
+          }
+        },
+        [_vm._v("\n                Operaciones\n            ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "dropdown-menu",
+          attrs: { "aria-labelledby": "navbarDropdown" }
+        },
+        [
+          _c(
+            "a",
+            {
+              staticClass: "dropdown-item",
+              attrs: { href: "#", onclick: "deleteItems(event)" }
+            },
+            [_vm._v("Eliminar")]
+          )
+        ]
+      )
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "nav-link dropdown-toggle",
+        attrs: {
+          href: "#",
+          id: "navbarDropdown",
+          role: "button",
+          "data-toggle": "dropdown",
+          "aria-haspopup": "true",
+          "aria-expanded": "false"
+        }
+      },
+      [_c("i", { staticClass: "fas fa-tag" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "select",
+      {
+        staticClass: "form-control mr-sm-2 controlb",
+        attrs: { name: "readed_filter", id: "readed_filter" }
+      },
+      [
+        _c("option", { attrs: { value: "all" } }, [_vm._v("Todos")]),
+        _vm._v(" "),
+        _c("option", { attrs: { value: "readed" } }, [_vm._v("Leídos")]),
+        _vm._v(" "),
+        _c("option", { attrs: { value: "unreaded" } }, [_vm._v("No leídos")])
+      ]
+    )
   },
   function() {
     var _vm = this

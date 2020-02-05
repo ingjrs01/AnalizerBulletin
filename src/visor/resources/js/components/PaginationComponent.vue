@@ -14,11 +14,11 @@
 
 <script>
     export default {
-        props: ['url'],
+        props: ['pagination'],
         data() {
             return {
                 lines : [],
-                pagination: {
+                pagination3: {
                     'current_page': 1, //1,
                     'total'       : 1, //45,
                     'last_page'   : 1, //3,
@@ -26,20 +26,15 @@
                     'from'        : 1, //1,
                     'to'          : 10 //10
                 },
-                offset: 2
+                offset: 1
             }
         },
         mounted() {
-            console.log("Pidiendo datos");
-            axios.get(this.url).then((response)=>{
-                //console.debug(response.data.pagination['current_page']);
-                //this.page = response.data.pagination['current_page'];
-
-                console.debug(response);
-                //this.lines = response.data.data.data;
-                //this.pagination = response.data.pagination;
-                //this.$emit('paginate_evt',this.lines);
-            });
+            //axios.get(this.url).then((response)=>{
+            //    this.lines = response.data.data.data;
+            //    this.pagination = response.data.pagination;
+            //    this.$emit('paginate_evt',this.lines);
+            //});
 
             console.log('Paginación cargada');
         },
@@ -51,12 +46,17 @@
                 if (page > this.pagination.last_page) {
                     page = this.pagination.last_page;
                 }
+                if (page < 1) {
+                    page = 1;
+                }
                 
-                axios.get(this.url + `?page=` + page).then((response)=>{
-                    this.lines = response.data.data.data;
-                    this.pagination = response.data.pagination;
-                    this.$emit('paginate_evt',this.lines);
-                });
+                this.$emit('paginate_evt',page);
+                this.pagination.current_page = page;
+                //axios.get(this.url + `?page=` + page).then((response)=>{
+                //    this.lines = response.data.data.data;
+                //    this.pagination = response.data.pagination;
+                //    this.$emit('paginate_evt',this.lines);
+                //});
             }
         },
         computed: {

@@ -5,9 +5,9 @@ services:
         ports: 
             - "8001:80"
         volumes:
-            - ./src:/var/www/html/
-            - ./conf/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
-#            - C:\Users\ingjr\Proyectos\php\proyecto1\src:/app
+#            - ./src:/var/www/html/
+            - C:\Users\ingjr\Proyectos\php\proyecto1/conf/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
+            - C:\Users\ingjr\Proyectos\php\proyecto1\src:/var/www/html/
         links:
             - db
         networks:
@@ -15,7 +15,7 @@ services:
     scrap:
         image: python
         volumes:
-            - /Users/juanriveiro/Proyectos/php/AnalizerBulletin/src2/:/root
+            - C:\Users\ingjr\Proyectos\php\proyecto1\src2\:/root
         links:
             - db
         networks:
@@ -32,7 +32,7 @@ services:
             MYSQL_ROOT_PASSWORD: test
         volumes:
             #- ./dump:/docker-entrypoint-initdb.d
-            - ./conf/mysql/:/etc/mysql/conf.d 
+            - C:\Users\ingjr\Proyectos\php\proyecto1/conf/mysql/:/etc/mysql/conf.d 
             - persistent:/var/lib/mysql
         networks:
             - default

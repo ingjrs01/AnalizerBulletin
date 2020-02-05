@@ -108,5 +108,11 @@ class Noticia():
             self.readed = 1
         if (self.seccion == "IV. ADMINISTRACIÓN DE JUSTICIA"):
             self.readed = 1
-
-    
+        if ("EXECUCIÓN DE TÍTULOS XUDICIAIS" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+            self.readed = 1
+        if ("EJECUCIÓN DE TÍTULOS JUDICIALES" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+            self.readed = 1
+        if ("NOTARIA DE" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+            self.readed = 1
+        if ("SUBASTAS" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+            self.readed = 1

@@ -212,5 +212,42 @@ class NoticiasController extends Controller
 
     }
 
+    /**
+     * Método igual al anterior, que responde a la nueva interfaz con vue. 
+     */
+    public function ajax(Request $request)
+    {
+        //return [2,4,5,6];
+
+        $resultados = Noticia::orderBy('bulletin_date', 'desc')->paginate(15);
+
+        $pagination = [
+            'total'        => $resultados->total(),
+            'current_page' => $resultados->currentPage(),
+            'per_page'     => $resultados->perPage(),
+            'last_page'    => $resultados->lastPage(),
+            'from'         => $resultados->firstItem(),
+            'to'           => $resultados->lastItem(),
+        ];
+        
+        //return dd($pagination);
+        return ['pagination'=>$pagination,'data'=>$resultados];
+
+
+
+        $bulletin    = $request->get('bulletin');
+        $year        = $request->get('bulletin_year');
+        $bulletin_no = $request->get('bulletin_no');
+        $destacado   = $request->get('destacado');
+        $search_tag  = $request->get('tag');
+        $sdate       = $request->get('date');
+        $readed      = $request->get('readed_filter');
+
+        $noticias = Noticia::buscar($bulletin,$year,$bulletin_no,$destacado,$search_tag,$sdate,$readed);
+
+        $resultados = array('datos'=>$noticias,'paginas'=>$noticias->links()->render());
+        return json_encode($resultados);
+
+    }
 
 }
