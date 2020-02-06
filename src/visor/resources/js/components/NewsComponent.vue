@@ -1,5 +1,39 @@
 <template>
     <div class="container">
+        <v-app>
+            <v-toolbar>
+                <v-toolbar-title>Otras cosas</v-toolbar-title>
+            </v-toolbar>
+
+      <v-app-bar>
+        <template v-slot:img="{ props }">
+          <v-img
+            v-bind="props"
+            gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
+          ></v-img>
+        </template>
+  
+        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+  
+        <v-toolbar-title>Bulletinator</v-toolbar-title>
+  
+        <v-spacer></v-spacer>
+  
+        <v-btn icon>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+  
+        <v-btn icon>
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+  
+        <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </v-app-bar>
+
+
+
         <h2>Componente para mostrar Noticias</h2>
         <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="#">Menú</a>
@@ -147,6 +181,7 @@
         </table>
 
         <pagination-component :pagination="this.pagination2" @paginate_evt="loadData"></pagination-component>
+        </v-app>
     </div>
 </template>
 
@@ -162,6 +197,12 @@
                 bulletin_no: 2020,
                 years: [2018,2019,2020],
                 boletines: ["DOGA", "BOPPO", "BOPCO", "BOPLU", "BOPOU", "BOE"],
+                items: [
+                { title: 'Click Me' },
+                { title: 'Click Me' },
+                { title: 'Click Me' },
+                { title: 'Click Me 2' },
+                ],
                 selected: [],
                 selectAll: false,
                 pagination2:  {
