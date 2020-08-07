@@ -1,4 +1,4 @@
-FROM php:7.2-apache
+FROM php:7.3-apache
 
 LABEL maintainer="Juan Ramón  juanriveiro@gmail.com"
 LABEL version="1.0"
@@ -35,4 +35,4 @@ RUN a2enmod rewrite
 EXPOSE 80
 CMD apachectl -D FOREGROUND
 
-WORKDIR /var/www/html/visor
+WORKDIR /var/www/html/

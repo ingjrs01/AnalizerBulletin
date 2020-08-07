@@ -154,12 +154,12 @@
             </thead>
             <tbody>
                 <tr  v-for="(line, index) in lines" class="table-default" :id="'table-row-id-' + line.id">
-                    <th scope="row">
+                    <td scope="row">
                         <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input control-check-j" :id="'tableDefaultCheck' + line.id" value="line.id" @click="silectSingle()" v-model="selected">
-                            <label class="custom-control-label" :for="'tableDefaultCheck' + line.id"> {{ line.id }} </label>
+                            <input type="checkbox" class="custom-control-input control-check-j" :id="'tableDefaultCheck-' + line.id" :value="line.id" v-model="selected">
+                            <label class="custom-control-label" :for="'tableDefaultCheck-' + line.id"> {{ line.id }} </label>
                         </div>
-                    </th>
+                    </td>
                     <td class="text-left "><a href="line.url" target="_blank">{{ line.newname }} </a></td>
                     <td>{{ line.bulletin  }}</td>
                     <td>{{ line.bulletin_no  }}</td>
@@ -179,7 +179,6 @@
                 </tr>
             </tbody>
         </table>
-
         <pagination-component :pagination="this.pagination2" @paginate_evt="loadData"></pagination-component>
         </v-app>
     </div>

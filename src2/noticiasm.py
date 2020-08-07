@@ -54,10 +54,16 @@ class Noticia():
         print ("Servicio: "  + self.servicio)
         print ("Noticia: "   + self.newname)
         print ("Url: "       + self.url)
+        print (" * ")
+        print (" Boletín: " + self.bulletin)
+        print (" Bulletin_year " + str(self.bulletin_year))
+        print (" bulletin_no: " + str(self.bulletin_no))
+        print (" bulletin_date " + str(self.bulletin_date))
         print ("----------------------------------------------------------------------------")
 
     def save(self):
         self.upper()
+        self.imprimir()
         self.setReaded()
         cursor = self.__db.cursor()
         sql = "INSERT INTO " + self.__tablename
@@ -102,17 +108,21 @@ class Noticia():
             self.readed = 1
         if ("SANCIONADOR" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
             self.readed = 1
-        if ("EXECUCIÓN TÍTULOS XUDICIAIS" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+        if ("EXECUCIÓN TÍTULOS XUDICIAIS" in self.newname): 
             self.readed = 1
-        if ("OBRIGA DE XESTIÓN DA BIOMASA" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+        if ("OBRIGA DE XESTIÓN DA BIOMASA" in self.newname):
             self.readed = 1
         if (self.seccion == "IV. ADMINISTRACIÓN DE JUSTICIA"):
             self.readed = 1
-        if ("EXECUCIÓN DE TÍTULOS XUDICIAIS" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+        if ("EXECUCIÓN DE TÍTULOS XUDICIAIS" in self.newname):
             self.readed = 1
-        if ("EJECUCIÓN DE TÍTULOS JUDICIALES" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+        if ("EJECUCIÓN DE TÍTULOS JUDICIALES" in self.newname): 
             self.readed = 1
-        if ("NOTARIA DE" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+        if ("NOTARIA DE" in self.newname):
             self.readed = 1
-        if ("SUBASTAS" in self.newname): # Noticias de Expediente Sancionador y Proceso Sancionador
+        if ("SUBASTAS" in self.newname): 
+            self.readed = 1
+        if ("PROCEDIMIENTO ELECTORAL" in self.newname): 
+            self.readed = 1
+        if ("SE NOMBRA CATEDRÁTIC" in self.newname): 
             self.readed = 1

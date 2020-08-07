@@ -44,7 +44,8 @@ class NoticiasController extends Controller
             'tag'           => $search_tag
         ));
 
-        return view('noticias.index',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags','search_tag','sdate'));
+        return view('noticias.index
+        ',compact('bulletin', 'boletines', 'year', 'years','bulletin_no','destacado' ,'noticias','tags','search_tag','sdate'));
     }
 
     /**
@@ -190,7 +191,7 @@ class NoticiasController extends Controller
         {
             $noticia = Noticia::findOrFail($id);
             $noticia->tags()->detach();
-            $noticia->delete();            
+            $noticia->delete();
         }
         return json_encode(true);
     }

@@ -14,6 +14,8 @@ class AnalizerBoe(Analizer):
         self.meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'] 
         self.__days = numero
         self.bulletin = "BOE"
+        self.urls = [] # Aquí vamos metiendo las urls que hay que analizar en las diferentes pasadas. 
+        self.urls_visited = []
 
     def analize(self,url):
         try: 
@@ -21,7 +23,7 @@ class AnalizerBoe(Analizer):
         except HTTPError as e:
             print(e)
         except URLError as u:
-            print("Servidor depo no encontrado " + url)
+            print("Servidor BOE no encontrado " + url)
             print(u)
         else:
             print ("Iniciando Análisis del BOE...")
@@ -36,8 +38,30 @@ class AnalizerBoe(Analizer):
             numero = partes[11]
             fecha = date(ano,mes,dia)
 
+                #<div class="solapasMultiplesBOES"><ul>
+                #    <li class="current"><abbr title="Número">Núm.</abbr> 89</li>
+                #    <li><a href="index.php?d=88"><abbr title="Número">Núm.</abbr> 88</a></li>
+                #    </ul>
+                #</div>
+            multiple = res.find('div',{'class':'solapasMultiplesBOES'})
+            if multiple is not None:
+                print("Encontrado día múltiple")
+                numero = int(multiple.find('li',{'class':'current'}).getText().split(" ")[1])
+                ano = int(partes[9])
+
+                if "/index.php?d=" not in url:
+                    otros = multiple.findAll("li",{'class': None})
+                    for o in otros:
+                        newurl = url + o.a['href']
+                        print(newurl)
+                        if newurl not in self.urls_visited:
+                            self.urls.append(newurl)
+
+            fecha = date(ano,mes,dia)
+
             # Comprobamos si ya existe
-            if  (self.checkBulletinExists(self.bulletin,fecha) == True):
+            #if (self.checkBulletinExists(self.bulletin,fecha) == True):
+            if (self.checkNumber(ano,numero,"BOE") == True):
                 print ("Ya he encontrado datos")
                 return True
                 
@@ -132,5 +156,15 @@ class AnalizerBoe(Analizer):
 
         self.getData()
     
+    def execute(self,url):
+        self.urls.append(url)
+        while len(self.urls) > 0:
+            u = self.urls.pop()
+            self.analize(u)
+    
     def imprimir(self):
         print ("Soy AnalizerBoe")
+
+
+a = AnalizerBoe(1)
+a.execute("https://www.boe.es/boe/dias/2020/03/27/")
