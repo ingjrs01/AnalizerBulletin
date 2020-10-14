@@ -14,6 +14,7 @@ class AnalizerDepo(Analizer):
     def __init__(self,numero):
         Analizer.__init__(self)
         self.__days = numero
+        self.bulletin = "BOPPO"
 
     def analize(self,url):
         try: 
@@ -40,11 +41,11 @@ class AnalizerDepo(Analizer):
             dia = int(info[len(info)-8])
             fecha = date(year, mes, dia)
 
-            if (self.checkNumber(year,numero,"BOPPO")):
+            if (self.checkNumber(year,numero,self.bulletin)):
                 return True
 
             self.beginAnalysis(fecha)
-            self.setAnalysisState("BOPPO",fecha,"INICIADO")
+            self.setAnalysisState(self.bulletin,fecha,"INICIADO")
 
             grupo = res.findAll("ul",{"class":"listadoSumario"})
 
@@ -57,7 +58,7 @@ class AnalizerDepo(Analizer):
                 lis = tag.findAll("li")
                 for li in lis:
                     noticia = Noticia()
-                    noticia.bulletin = "BOPPO"
+                    noticia.bulletin = self.bulletin
                     noticia.bulletin_year = year
                     noticia.bulletin_no = numero
                     noticia.bulletin_date = fecha
@@ -81,7 +82,7 @@ class AnalizerDepo(Analizer):
                     noticia.imprimir()
                     noticia.save()
             # LLegados aquí, ha finalizado el análisis
-            self.setAnalysisState("BOPPO",fecha,"FINALIZADO")
+            self.setAnalysisState(self.bulletin,fecha,"FINALIZADO")
 
     def normalizar(self,noticia):
         if (noticia.seccion == "XUNTA DE GALICIA"):

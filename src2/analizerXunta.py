@@ -15,6 +15,7 @@ class AnalizerXunta(Analizer):
     def __init__(self,numero):
         Analizer.__init__(self)
         self.__days = numero
+        self.bulletin = "DOGA"
    
     def analize(self,url):
         try: 
@@ -40,7 +41,7 @@ class AnalizerXunta(Analizer):
             dia = int(temp[len(temp)-5])
             fecha = date(year,mes,dia)
 
-            if  (self.checkBulletinExists("DOGA",fecha) == True):
+            if  (self.checkBulletinExists(self.bulletin,fecha) == True):
                 print ("Ya he encontrado datos")
                 return True
                 
@@ -52,7 +53,7 @@ class AnalizerXunta(Analizer):
                 for line in lines:
                     if (line.a is not None):
                         noticia = Noticia()
-                        noticia.bulletin = "DOGA"
+                        noticia.bulletin = self.bulletin
                         noticia.bulletin_year = year
                         noticia.bulletin_no = numero
                         noticia.bulletin_date = fecha
@@ -198,14 +199,14 @@ class AnalizerXunta(Analizer):
         for i in range(1,self.__days+1):
             sqldate = date(int(tempdate.year),int(tempdate.month),int (tempdate.day))
             if (tempdate.weekday() not in [5,6]): 
-                self.setAnalysisState("DOGA",tempdate,"INICIADO")
+                self.setAnalysisState(self.bulletin,tempdate,"INICIADO")
                 url = url_fija + str(tempdate.year) + "/" + str(tempdate.year) + format(tempdate.month, '02') + format(tempdate.day, '02')
                 url += "/Secciones1_gl.html&paginaCompleta=false&fecha=" +  format(tempdate.day, '02') + "/" + format(tempdate.month, '02') + "/" + str(tempdate.year)
                 url_tmp = self.analizarPrincipal(url)
                 if (len(url_tmp) > 0):
                     for i in url_tmp:
                         self.analize(i)
-                self.setAnalysisState("DOGA",sqldate,"FINALIZADO")
+                self.setAnalysisState(self.bulletin,sqldate,"FINALIZADO")
 
             tempdate = tempdate - timedelta(days=1)
 

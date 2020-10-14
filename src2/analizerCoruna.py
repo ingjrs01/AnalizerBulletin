@@ -12,6 +12,7 @@ class AnalizerCoruna(Analizer):
     def __init__(self,numero):
         Analizer.__init__(self)
         self.__days = numero
+        self.bulletin = "BOPCO"
         self.meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'] 
 
     def analize(self,url):
@@ -39,16 +40,16 @@ class AnalizerCoruna(Analizer):
             ano = int(cachos[11])
             fecha = date(ano,mes,dia)
 
-            if (self.checkNumber(ano,numero,"BOPCO")):
+            if (self.checkNumber(ano,numero,self.bulletin)):
                 return True # Ya existen. 
                 
             self.beginAnalysis(fecha)
-            self.setAnalysisState("BOPCO",fecha,"INICIADO")
+            self.setAnalysisState(self.bulletin,fecha,"INICIADO")
 
             anuncios = res.findAll("div",{"class":"bloqueAnuncio"})
             for anuncio in anuncios: 
                 noticia = Noticia()
-                noticia.bulletin = "BOPCO"
+                noticia.bulletin = self.bulletin
                 noticia.bulletin_year = ano
                 noticia.bulletin_no = numero
                 noticia.bulletin_date = fecha                

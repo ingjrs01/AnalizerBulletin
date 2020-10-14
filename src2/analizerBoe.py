@@ -61,7 +61,7 @@ class AnalizerBoe(Analizer):
 
             # Comprobamos si ya existe
             #if (self.checkBulletinExists(self.bulletin,fecha) == True):
-            if (self.checkNumber(ano,numero,"BOE") == True):
+            if (self.checkNumber(ano,numero,self.bulletin) == True):
                 print ("Ya he encontrado datos")
                 return True
                 
@@ -164,7 +164,3 @@ class AnalizerBoe(Analizer):
     
     def imprimir(self):
         print ("Soy AnalizerBoe")
-
-
-a = AnalizerBoe(1)
-a.execute("https://www.boe.es/boe/dias/2020/03/27/")

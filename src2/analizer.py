@@ -138,5 +138,6 @@ class Analizer():
            self.db.commit()
         except Error as e:
            self.db.rollback()
+
            print("No se ha podido introducir el dato: ")
         return True

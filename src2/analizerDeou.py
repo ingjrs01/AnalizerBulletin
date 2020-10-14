@@ -14,6 +14,7 @@ class AnalizerDeou(Analizer):
     def __init__(self,numero):
         Analizer.__init__(self)
         self.__days = numero
+        self.bulletin = "BOPOU"
         self.meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'] 
 
     def isNotificable(selft, new):
@@ -47,10 +48,10 @@ class AnalizerDeou(Analizer):
             dia = int(sumario[7])
             fecha = date(year, mes, dia)
             self.beginAnalysis(fecha)
-            self.setAnalysisState("BOPOU",fecha,"INICIADO")
+            self.setAnalysisState(self.bulletin,fecha,"INICIADO")
             v_url = "https://bop.depourense.es/portal/" + res.find("a",{"class":"enlacePdfS"})['href']
 
-            if  (self.checkNumber(year,numero,"BOPOU") == False):
+            if  (self.checkNumber(year,numero,self.bulletin) == False):
                 grupo = res.findAll("td",{"class":"textoS","width":"90%"})
 
                 for elemento in grupo:
@@ -58,7 +59,7 @@ class AnalizerDeou(Analizer):
                     noticia.newname = elemento.getText().strip()
                     noticia.organismo = elemento.findPrevious('span',{"class":"tituloS"}).getText()
                     noticia.seccion = elemento.findPrevious('span',{"class":"seccionS"}).getText()
-                    noticia.bulletin = "BOPOU"
+                    noticia.bulletin = self.bulletin
                     noticia.bulletin_year = year
                     noticia.bulletin_no = numero
                     noticia.bulletin_date = fecha
@@ -75,7 +76,7 @@ class AnalizerDeou(Analizer):
             else:
                 print ("Paso al siguiente")
 
-            self.setAnalysisState("BOPOU",fecha,"FINALIZADO")
+            self.setAnalysisState(self.bulletin,fecha,"FINALIZADO")
             print ("Esperando")
             time.sleep(5)
             print("Reanudando")

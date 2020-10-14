@@ -12,9 +12,9 @@ class AnalizerDelu(Analizer):
     def __init__(self,numero):
         Analizer.__init__(self)
         self.__days = numero
-        #self.__meses = ['xaneiro','febreiro','marzo','abril','maio','xuño','xullo','agosto','setembro','outubro','novembro','decembro'] 
+        self.bulletin = "BOPLU"
 
-    def analize(self,url):                
+    def analize(self,url):
         try: 
             html = urlopen(url)
         except HTTPError as e:
@@ -36,10 +36,10 @@ class AnalizerDelu(Analizer):
             anio = int(sfecha[5])
             fecha = date(anio,mes,dia)
 
-            if (self.checkNumber(anio,numero,"BOPLU")):
+            if (self.checkNumber(anio,numero,self.bulletin)):
                 return True
             self.beginAnalysis(fecha)
-            self.setAnalysisState("BOPLU",fecha,"INICIADO")
+            self.setAnalysisState(self.bulletin,fecha,"INICIADO")
 
             div = res.find("div",{"class":"field--name-field-ail-bop-contenido"})
             lista = div.find("ul")
@@ -57,7 +57,7 @@ class AnalizerDelu(Analizer):
                         noticias = organismo.find("ul")
                         if ((organismo.strong is None) or (noticias is None)):
                             noticia = Noticia()
-                            noticia.bulletin = "BOPLU"
+                            noticia.bulletin = self.bulletin
                             noticia.bulletin_year = anio
                             noticia.bulletin_no = numero
                             noticia.bulletin_date = fecha
@@ -85,7 +85,7 @@ class AnalizerDelu(Analizer):
                             noticias = organismo.ul.findChildren("li")
                             for n in noticias:
                                 noticia = Noticia()
-                                noticia.bulletin = "BOPLU"
+                                noticia.bulletin = self.bulletin
                                 noticia.bulletin_year = anio
                                 noticia.bulletin_no = numero
                                 noticia.bulletin_date = fecha
@@ -107,7 +107,7 @@ class AnalizerDelu(Analizer):
                                 noticia.save()
                 else: 
                     print ("Lista vacía")
-            self.setAnalysisState("BOPLU",fecha,"FINALIZADO")
+            self.setAnalysisState(self.bulletin,fecha,"FINALIZADO")
 
     def normalizar(self,noticia):
         if (noticia.seccion == "XUNTA DE GALICIA"):

@@ -17,6 +17,8 @@ class NoticiasController extends Controller
      */
     public function index(Request $request)
     {
+        //return json_encode("hola holita holota");
+        
         $bulletin    = $request->get('bulletin');
         $year        = $request->get('bulletin_year');
         $bulletin_no = $request->get('bulletin_no');
